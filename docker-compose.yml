@@ -1,0 +1,12 @@
+services:
+  maventest:
+    build: ./maven
+    volumes:
+      - ./tomcat/STUTCJ_Fingerprint_Server.war:/tmp/target/STUTCJ_Fingerprint_Server.war
+  tomcattest:
+    build: ./tomcat
+    depends_on:
+      maventest:
+        condition: service_completed_successfully
+    ports:
+      - "8888:8080"

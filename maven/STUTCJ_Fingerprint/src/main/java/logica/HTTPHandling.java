@@ -44,8 +44,8 @@ public class HTTPHandling {
 	}
 	
 	public static void handleResponse(HttpServletResponse response, String status, String msg) throws IOException {
-		String json = "{'status':'"+ status +"',"
-				+ "'message':'" + msg + "'}";
+		String json = "{\"status\":\""+ status +"\","
+				+ "\"message\":" + msg + "}";
 		
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");

@@ -10,14 +10,15 @@ public class DatabaseEvento {
 	private final String url = "jdbc:sqlite:database.db";
 	private Connection conn;
 
-	public DatabaseEvento() throws SQLException {
+	public DatabaseEvento() throws SQLException, ClassNotFoundException {
 		super();
 		
+		Class.forName("org.sqlite.JDBC");
 		conn = DriverManager.getConnection(url);
 		
 		final String startSQL = "CREATE TABLE IF NOT EXISTS evento ("
 				+ "	id INTEGER PRIMARY KEY NOT NULL,"
-				+ "	nombre VARCHAR(255) NOT NULL,"
+				+ "	titulo VARCHAR(255) NOT NULL,"
 				+ "	descripcion VARCHAR(255)"
 				+ ");";
 		
@@ -33,7 +34,7 @@ public class DatabaseEvento {
 		pstmt.setInt(1, id);
 		var rs = pstmt.executeQuery();
 		
-		String nombre = rs.getString("nombre");
+		String nombre = rs.getString("titulo");
 		String descripcion = rs.getString("descripcion");
 		
 		return new Evento(id, nombre, descripcion);
@@ -46,6 +47,8 @@ public class DatabaseEvento {
 		final String sql = "SELECT * FROM evento LIMIT ? OFFSET ?";
 		
 		var pstmt = conn.prepareStatement(sql);
+		pstmt.setInt(1, limit);
+		pstmt.setInt(2, offset);
 		var rs = pstmt.executeQuery();
 		
 		while (rs.next()) {
@@ -60,12 +63,12 @@ public class DatabaseEvento {
 	}
 	
 	//Create new event
-	public void addEvento(Evento event) throws SQLException {
+	public void addEvento(String titulo, String descripcion) throws SQLException {
 		final String sql = "INSERT INTO evento (titulo, descripcion) VALUES (?, ?)";
 		
 		var pstmt = conn.prepareStatement(sql);
-		pstmt.setString(1,  event.getTitulo());
-		pstmt.setString(2, event.getDescripcion());
+		pstmt.setString(1,  titulo);
+		pstmt.setString(2, descripcion);
 		pstmt.executeUpdate();
 	}
 	

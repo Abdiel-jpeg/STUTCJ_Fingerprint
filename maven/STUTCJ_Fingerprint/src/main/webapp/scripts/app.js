@@ -1,3 +1,5 @@
+let encodedImage;
+
 var FingerprintSdkTest = (function () {
     function FingerprintSdkTest(element) {
         var _instance = this;
@@ -9,11 +11,12 @@ var FingerprintSdkTest = (function () {
         this.sdk.onSamplesAcquired = function (s) {
             var samples = JSON.parse(s.samples);
             var image = document.createElement("img");
-			var encodedImage = window.btoa(Fingerprint.b64UrlToUtf8(samples[0]));
+			image.className = "fingerprintImage";
+			encodedImage = window.btoa(Fingerprint.b64UrlToUtf8(samples[0]));
             image.src = "data:image/png;base64," + encodedImage;
             _instance.resultList.appendChild(image);
 			
-			const jsonQuery = {
+			/*const jsonQuery = {
 				option: "setImage",
 				data: encodedImage
 			};
@@ -25,7 +28,7 @@ var FingerprintSdkTest = (function () {
 				console.log(json);
 			}
 			
-			fetchImage();
+			fetchImage();*/
 
         };
         this.element = element;
@@ -42,7 +45,7 @@ var FingerprintSdkTest = (function () {
         var btnStop = document.createElement("button");
         var btnStopText = document.createTextNode("Stop Capture");
         btnStop.appendChild(btnStopText);
-        btnStop.onclick = function (e) { _instance.stopCapture(); };
+        btnStop.onclick = function (e) { _instance.stopCapture(); encodedImage = undefined};
         this.element.appendChild(btnStop);
         this.resultList = document.createElement("div");
         this.element.appendChild(this.resultList);

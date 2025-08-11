@@ -5,13 +5,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+//import jsonTemplates.JsonTemplate;
+import jsonTemplates.subjectJsonTemplate;
 import logica.DatabaseSubject;
-import logica.JsonTemplate;
 import logica.HTTPHandling;
+import logica.Subject;
+import logica.SubjectDTO;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Base64;
 
 import com.google.gson.Gson;
 
@@ -24,14 +28,17 @@ public class SvSubject extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
-     * @throws SQLException 
-     * @throws ClassNotFoundException 
      * @see HttpServlet#HttpServlet()
      */
-    public SvSubject() throws SQLException, ClassNotFoundException {
+    public SvSubject() {
         super();
         // TODO Auto-generated constructor stub
-        this.dbSubject = new DatabaseSubject();
+        try {
+			this.dbSubject = new DatabaseSubject();
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
 	/**
@@ -84,25 +91,69 @@ public class SvSubject extends HttpServlet {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
 		
-		var json = new Gson().fromJson(HTTPHandling.getBody(request), JsonTemplate.class);
-		System.out.print(json);
+		var json = new Gson().fromJson(HTTPHandling.getBody(request), subjectJsonTemplate.class);
+		System.out.println(json);
 		
-		switch (json.getOption()) {
-		case "processFiles":
-			try {
-				dbSubject.addSubjectsToDBTest(json.getData());
+		try {
+			switch(json.getOpcion()) {
+			case "subjectDelete":
+				dbSubject.deleteSubject(json.getNreloj());
 				
-				HTTPHandling.handleResponse(response, "ok", "Datos probablemente añadidos a la BBDD");
-			} catch (IOException | SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 				
-				HTTPHandling.handleResponse(response, "error", "Error al ejecutar Test: " + e.getMessage());
+				HTTPHandling.handleResponse(response, "ok", "Se ha eliminado con exito el sujeto");
+				break;
+			case "subjectUpdate":
+				dbSubject.updateSubject(new Subject(json.getNreloj(), 
+						json.getNombre(),
+						json.getApellidoPaterno(),
+						json.getApellidoMaterno(),
+						Base64.getDecoder().decode(new String(json.getFingerprintImage().getBytes("UTF-8"))),
+						json.getActivado() >= 1 ? true : false), json.getUpdateSelector());
+				
+				HTTPHandling.handleResponse(response, "ok", "se ha actualizado el sujeto con exito");
+				
+				break;
+			case "subjectUpdateWithoutImage":
+				dbSubject.updateSubjectWithoutImage(new SubjectDTO(json.getNreloj(),
+						json.getNombre(),
+						json.getApellidoPaterno(),
+						json.getApellidoMaterno(),
+						json.getActivado() >= 1 ? true : false), json.getUpdateSelector());
+				
+				HTTPHandling.handleResponse(response, "ok", "se ha actualizado el sujeto con exito");
+				
+				break;
+			case "subjectAdd":
+				dbSubject.addSubjectToDB(new Subject(json.getNreloj(),
+						json.getNombre(),
+						json.getApellidoPaterno(),
+						json.getApellidoMaterno(),
+						Base64.getDecoder().decode(new String(json.getFingerprintImage().getBytes("UTF-8"))),
+						json.getActivado() >= 1 ? true: false));
+				
+				HTTPHandling.handleResponse(response, "ok", "se ha añadido el sujeto con exito");
+				
+				break;
+			case "subjectAddWithoutImage":
+				dbSubject.addSubjectToDBWithoutImage(new SubjectDTO(json.getNreloj(),
+						json.getNombre(),
+						json.getApellidoPaterno(),
+						json.getApellidoMaterno(),
+						json.getActivado() >= 1 ? true : false));
+				
+				HTTPHandling.handleResponse(response, "ok", "se ha añadido el sujeto con exito");
+				
+				break;
+			default:
+				HTTPHandling.handleResponse(response, "error", "No existe tal opcion. Opciones disponibles: subjectDelete, subjectUpdate, "
+						+ "subjectUpdateWithoutImage, subjectAdd, subjectAddWithoutImage");
 			}
+				
+		} catch (NumberFormatException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			
-			break;
-		default:
-			HTTPHandling.handleResponse(response, "error", "Opcion no disponible en la API");
+			HTTPHandling.handleResponse(response, "error", "ups, ha sucedido un error");
 		}
 	}
 }

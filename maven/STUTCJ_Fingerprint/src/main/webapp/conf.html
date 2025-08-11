@@ -1,0 +1,22 @@
+<!Doctype html>
+
+<html>
+	<head>
+		<title>Configuración del Servidor</title>
+		<script src="scripts/fetchParams.js"></script>
+		<script src="scripts/conf.js"></script>
+		<meta charset="UTF-8">
+	</head>
+	
+	<body>
+		<form action='SvConf' method="POST">
+			<h1>Configuración del Servidor</h1>
+			<h2>Toma de asistencia</h2>
+			<p><label>Margen de error:</label> <input id="threshold" type="number" name="threshold"><p>
+			<p>Mientras sea menor el margen de error mas respuestas inexactas de asistencias habrá.</p>
+			<p>Sin embargo, si este valor es demasiado alto no se reconocerá ningún sujeto</p>
+			<p>Se debe de modificar este valor para encontrar el equilibrio en la toma de asistencia</p>
+			<button id="submitButton" type="submit">Actualizar Configuración</button>
+		</form>
+	</body>
+</html>

@@ -34,8 +34,8 @@ public class DatabaseSubject {
 	}
 	
 	//In case of getting just one subject
-	public Subject getSubject(int nreloj) throws SQLException {
-		final String sql = "SELECT * FROM subject WHERE nreloj=?";
+	public SubjectDTOImage getSubject(int nreloj) throws SQLException {
+		final String sql = "SELECT nombre, apellidoPaterno, apellidoMaterno, image, activated FROM subject WHERE nreloj=?";
 		
 		var pstmt = conn.prepareStatement(sql);
 		pstmt.setInt(1, nreloj);
@@ -45,10 +45,9 @@ public class DatabaseSubject {
 		String apellidoPaterno = rs.getString("apellidoPaterno");
 		String apellidoMaterno = rs.getString("apellidoMaterno");
 		byte[] image = rs.getBytes("image");
-		byte[] template = rs.getBytes("template");
 		int activated = rs.getInt("activated");
 		
-		return new Subject(nreloj, nombre, apellidoPaterno, apellidoMaterno, image, template, activated >= 1 ? true : false);
+		return new SubjectDTOImage(nreloj, nombre, apellidoPaterno, apellidoMaterno, image, activated >= 1 ? true : false);
 	}
 	
 	//In case of getting multiple subjects 
@@ -120,8 +119,25 @@ public class DatabaseSubject {
 		pstmt.executeUpdate();
 	}
 	
+	public void addSubjectToDBWithoutImage(SubjectDTO sujeto) throws SQLException {
+		final String sql = "INSERT INTO subject (nreloj, nombre, apellidoPaterno, apellidoMaterno, activado)";
+		
+		var pstmt = conn.prepareStatement(sql);
+		try {
+			pstmt.setInt(1, sujeto.nreloj);
+			pstmt.setString(2, sujeto.nombre);
+			pstmt.setString(3, sujeto.apellidoPaterno);
+			pstmt.setString(4, sujeto.apellidoMaterno);
+			pstmt.setInt(5, sujeto.activated ? 1 : 0);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void updateSubject(Subject sujeto, int nreloj) throws SQLException {
-		final String sql = "UPDATE subject SET nreloj=?"
+		final String sql = "UPDATE subject SET nreloj=?,"
 				+ "	nombre=?,"
 				+ "	apellidoPaterno=?,"
 				+ "	apellidoMaterno=?,"
@@ -142,11 +158,34 @@ public class DatabaseSubject {
 		pstmt.executeUpdate();
 	}
 	
+	public void updateSubjectWithoutImage(SubjectDTO sujeto, int nreloj) throws SQLException {
+		final String sql = "UPDATE subject SET nreloj=?,"
+				+ "	nombre=?,"
+				+ "	apellidoPaterno=?,"
+				+ "	apellidoMaterno=?,"
+				+ "	activated=?"
+				+ " WHERE nreloj=?";
+		
+		var pstmt = conn.prepareStatement(sql);
+		pstmt.setInt(1, sujeto.nreloj);
+		pstmt.setString(2, sujeto.nombre);
+		pstmt.setString(3, sujeto.apellidoPaterno);
+		pstmt.setString(4, sujeto.apellidoMaterno);
+		pstmt.setInt(5, sujeto.activated ? 1 : 0);
+		pstmt.setInt(6, nreloj);
+		pstmt.executeUpdate();
+	}
+	
 	public void deleteSubject(int nreloj) throws SQLException {
 		final String sql = "DELETE FROM subject WHERE nreloj=?";
 		
 		var pstmt = conn.prepareStatement(sql);
 		pstmt.setInt(1, nreloj);
 		pstmt.executeUpdate();
+	}
+	
+	//For executing custom SQL  (only for testing)
+	public Connection getConn() {
+		return conn;
 	}
 }

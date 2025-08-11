@@ -42,7 +42,7 @@ public class Subject {
 	}
 
 	//This constructor method is called to build the template in case it's not given
-	public Subject(int nreloj, String nombre, String apellidoPaterno, String apellidoMaterno, byte[] image) {
+	public Subject(int nreloj, String nombre, String apellidoPaterno, String apellidoMaterno, byte[] image, boolean activated) {
 		super();
 		this.nreloj = nreloj;
 		this.nombre = nombre;
@@ -50,7 +50,7 @@ public class Subject {
 		this.apellidoMaterno = apellidoMaterno;
 		this.image = image;
 		this.template = new FingerprintTemplate(new FingerprintImage(this.image, options));
-		this.activated = true;
+		this.activated = activated;
 	}
 
 	//It's only here to add test querys to the database

@@ -1,4 +1,4 @@
-package logica;
+package jsonTemplates;
 
 public class JsonTemplate {
 	private String option;

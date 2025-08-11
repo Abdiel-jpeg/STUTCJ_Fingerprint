@@ -5,9 +5,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jsonTemplates.JsonTemplate;
 import logica.DatabaseAsistencia;
 import logica.HTTPHandling;
-import logica.JsonTemplate;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -50,8 +50,6 @@ public class SvAsistencia extends HttpServlet {
 		
 		var json = new Gson().fromJson(HTTPHandling.getBody(request), JsonTemplate.class);
 		
-		HTTPHandling.handleResponse(response, "ok", "imagen recibida");
-		
 		//byte[] image = Base64.getDecoder().decode(json.getData());
 		byte[] image = Base64.getDecoder().decode(new String(json.getData()).getBytes("UTF-8"));
 		
@@ -59,7 +57,7 @@ public class SvAsistencia extends HttpServlet {
 			var sujeto = dbAsistencia.tomarAsistencia(image);
 			var jsonStr = new Gson().toJson(sujeto);
 			
-			HTTPHandling.handleResponse(response, "ok", "Asistencia para: " + jsonStr);
+			HTTPHandling.handleResponse(response, "ok", jsonStr);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

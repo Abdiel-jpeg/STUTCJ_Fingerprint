@@ -39,15 +39,6 @@
       <artifactId>sqlite-jdbc</artifactId>
       <version>3.50.3.0</version>
     </dependency>
-
-    <!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
-  <dependency>
-      <groupId>jakarta.servlet</groupId>
-      <artifactId>jakarta.servlet-api</artifactId>
-      <version>6.1.0</version>
-      <scope>provided</scope>
-  </dependency>
-
   	
   </dependencies>
 
@@ -55,17 +46,6 @@
     <finalName>STUTCJ_Fingerprint_Server</finalName>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
-        <plugin>
-          <groupId>org.apache.tomcat.maven</groupId>
-          <artifactId>tomcat7-maven-plugin</artifactId>
-          <version>2.0</version>
-          <configuration>
-            <server>maven-tomcat-war-deployment-server</server>
-            <url>http://tomcattest:8080/manager/text</url>
-            <path>/STUTCJ_Fingerprint_Server</path>
-            <update>true</update>
-          </configuration>
-        </plugin>
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
           <version>3.4.0</version>
@@ -86,9 +66,6 @@
         <plugin>
           <artifactId>maven-war-plugin</artifactId>
           <version>3.4.0</version>
-          <configuration>
-            <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
-          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>

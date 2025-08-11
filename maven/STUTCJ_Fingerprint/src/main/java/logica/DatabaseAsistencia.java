@@ -11,6 +11,7 @@ import com.machinezoo.sourceafis.FingerprintTemplate;
 public class DatabaseAsistencia {
 	private final String url = "jdbc:sqlite:database.db";
 	private Connection conn;
+	public static double threshold = 15;
 
 	public DatabaseAsistencia() throws SQLException, ClassNotFoundException {
 		super();
@@ -56,8 +57,6 @@ public class DatabaseAsistencia {
             	match = new SubjectDTO(nreloj, nombre, apellidoPaterno, apellidoMaterno, activated >= 1 ? true : false);
              }
 		}
-		
-	    double threshold = 20;
 	    return max >= threshold ? match : null;
     }
 }

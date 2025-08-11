@@ -19,4 +19,15 @@ public class SubjectDTOImage {
 		this.fingerprintImage = new String(Base64.getEncoder().encode(encodedImage));
 		this.activated = activated;
 	}
+
+	public SubjectDTOImage(int nreloj, String nombre, String apellidoPaterno, String apellidoMaterno,
+			boolean activated) {
+		super();
+		this.nreloj = nreloj;
+		this.nombre = nombre;
+		this.apellidoPaterno = apellidoPaterno;
+		this.apellidoMaterno = apellidoMaterno;
+		this.fingerprintImage = "";
+		this.activated = activated;
+	}
 }

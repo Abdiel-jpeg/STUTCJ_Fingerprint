@@ -59,7 +59,10 @@ const updateSubjectWithoutImage = async (
 //-------------------- Logica ---------------------
 
 const insertData = async (subjectForm) => {
-	const data = await getSubject(3);
+	const queryString = window.location.search;
+	const params = new URLSearchParams(queryString);
+	const nreloj = params.get("nreloj");
+	const data = await getSubject(nreloj);
 	inputs = subjectForm.querySelectorAll("input");
 	let imageContainer = subjectForm.querySelector(".image-container");
 	const base64String = "data:image/png;base64," + data.fingerprintImage;
@@ -103,6 +106,6 @@ window.addEventListener("load", async () => {
 				updateSubject(nreloj, nombre, apellidoPaterno, apellidoMaterno, encodedImage, activated == "true" ? 1 : 0, updateSelector);
 			}
 		})
-	
+
 	insertData(subjectForm)
 })

@@ -9,14 +9,26 @@
 	</head>
 	
 	<body>
-		<form action='SvConf' method="POST">
-			<h1>Configuración del Servidor</h1>
+		
+		<h1>Configuración del Servidor</h1>
+		
+		<div>
 			<h2>Toma de asistencia</h2>
 			<p><label>Margen de error:</label> <input id="threshold" type="number" name="threshold"><p>
 			<p>Mientras sea menor el margen de error mas respuestas inexactas de asistencias habrá.</p>
 			<p>Sin embargo, si este valor es demasiado alto no se reconocerá ningún sujeto</p>
 			<p>Se debe de modificar este valor para encontrar el equilibrio en la toma de asistencia</p>
 			<button id="submitButton" type="submit">Actualizar Configuración</button>
-		</form>
+		</div>
+		<div>
+			<h2>SCV</h2>
+			<p><label>Añadir manualmente archivo SCV:</label> <input id="inputFile" type="file" accept=".csv"></p>
+			<button id="fileButton">Enviar</button>
+		</div>
+		<div>
+			<h2>Área de peligro</h2>
+			
+			<p><button id="borrarTodo">Borrar todos los sujetos</button></p>
+		</div>
 	</body>
 </html>

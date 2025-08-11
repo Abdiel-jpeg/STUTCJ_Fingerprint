@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inicio de Sesión</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #1e1e2f;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #2c2c3e;
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+      width: 400px;
+    }
+
+    .container img {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      color: #fff;
+      margin-bottom: 30px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    .btn {
+      background-color: #5c6bc0;
+      color: white;
+      padding: 12px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 10px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #3f51b5;
+    }
+
+    .btn-nosotros {
+      display: inline-block;
+      margin-top: 20px;
+      color: #5c6bc0;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+
+    .btn-nosotros:hover {
+      color: #7986cb;
+      text-decoration: underline;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Inicio de Sesión</h2>
+    <form action="Principal.jsp" method="post">
+      <input type="text" name="usuario" placeholder="Usuario" required />
+      <input type="password" name="contrasena" placeholder="Contraseña" required />
+      <button type="submit" class="btn">Iniciar Sesión</button>
+    </form>
+
+    <!-- Aquí se pone el enlace fuera del formulario -->
+    <a href="nosotros.html" class="btn-nosotros">Acerca de Nosotros</a>
+  </div>
+</body>
+</html>

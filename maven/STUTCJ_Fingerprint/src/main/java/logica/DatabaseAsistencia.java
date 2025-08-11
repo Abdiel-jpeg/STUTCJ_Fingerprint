@@ -44,6 +44,10 @@ public class DatabaseAsistencia {
         double max = Double.NEGATIVE_INFINITY;
 		
 		while (rs.next()) {
+			if(rs.getString("template") == null) {
+				continue;
+			}
+			
 			double similarity = matcher.match(new FingerprintTemplate(rs.getBytes("template")));
 			String nombre = rs.getString("nombre");
 			System.out.println("Similarity with "  + rs.getString("nombre") + " is " + similarity);

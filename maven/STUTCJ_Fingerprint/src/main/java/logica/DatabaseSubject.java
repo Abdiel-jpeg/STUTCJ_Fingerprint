@@ -47,6 +47,9 @@ public class DatabaseSubject {
 		byte[] image = rs.getBytes("image");
 		int activated = rs.getInt("activated");
 		
+		if (image == null) {
+			return new SubjectDTOImage(nreloj, nombre, apellidoPaterno, apellidoMaterno, activated >= 1 ? true : false);
+		}
 		return new SubjectDTOImage(nreloj, nombre, apellidoPaterno, apellidoMaterno, image, activated >= 1 ? true : false);
 	}
 	

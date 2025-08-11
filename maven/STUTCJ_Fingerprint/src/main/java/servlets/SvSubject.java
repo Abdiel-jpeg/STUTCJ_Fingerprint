@@ -67,6 +67,7 @@ public class SvSubject extends HttpServlet {
 				
 			} else {
 				var sujeto = dbSubject.getSubject(nreloj);
+				
 				json = new Gson().toJson(sujeto);
 			}
 			

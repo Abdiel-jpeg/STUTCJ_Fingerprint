@@ -27,5 +27,14 @@ services:
       - "8888:8080"
     volumes:
       - "./target/STUTCJ_Fingerprint_Server.war:/usr/local/tomcat/webapps/STUTCJ_Fingerprint_Server.war"
+  pythontest:
+    build: python-server
+    ports:
+      - "9002:9002"
+    env_file:
+      - "db.env"
+    depends_on:
+      tomcattest:
+        condition: service_started
 volumes:
   db_data:

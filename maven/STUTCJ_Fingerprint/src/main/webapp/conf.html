@@ -13,6 +13,11 @@
 		<h1>Configuración del Servidor</h1>
 		
 		<div>
+			<h2>Tabla del Agremiado</h2>
+			<p><label>N. de resultados por página:</label> <input id ="limit" type="number"></p>
+		</div>
+		
+		<div>
 			<h2>Toma de asistencia</h2>
 			<p><label>Margen de error:</label> <input id="threshold" type="number" name="threshold"><p>
 			<p>Mientras sea menor el margen de error mas respuestas inexactas de asistencias habrá.</p>
@@ -23,8 +28,9 @@
 		<div>
 			<h2>SCV</h2>
 			<p><label>Añadir manualmente archivo SCV:</label> <input id="inputFile" type="file" accept=".csv"></p>
-			<button id="fileButton">Enviar</button>
 		</div>
+		<button id="fileButton">Enviar</button>
+		
 		<div>
 			<h2>Área de peligro</h2>
 			

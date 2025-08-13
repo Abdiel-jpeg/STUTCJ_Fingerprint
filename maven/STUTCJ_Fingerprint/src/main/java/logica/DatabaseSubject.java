@@ -5,24 +5,23 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseSubject {
-	private final String url = "jdbc:sqlite:database.db";
+	public static int limit = 50;
 	private Connection conn;
 
 	public DatabaseSubject() throws SQLException, ClassNotFoundException {
 		super();
-		Class.forName("org.sqlite.JDBC");
-		conn = DriverManager.getConnection(url);
+		
+		conn = DBConn.getConn();
 		
 		final String startSQL = "CREATE TABLE IF NOT EXISTS subject ("
 				+ "	nreloj INTEGER PRIMARY KEY NOT NULL,"
-				+ "	nombre VARHCHAR(255) NOT NULL,"
-				+ "	apellidoPaterno VARHCHAR(255) NOT NULL,"
+				+ "	nombre VARCHAR(255) NOT NULL,"
+				+ "	apellidoPaterno VARCHAR(255) NOT NULL,"
 				+ "	apellidoMaterno VARCHAR(255) NOT NULL,"
 				+ "	image BLOB NULL,"
 				+ "	template BLOB NULL,"
@@ -40,6 +39,7 @@ public class DatabaseSubject {
 		var pstmt = conn.prepareStatement(sql);
 		pstmt.setInt(1, nreloj);
 		var rs = pstmt.executeQuery();
+		rs.next();
 		
 		String nombre = rs.getString("nombre");
 		String apellidoPaterno = rs.getString("apellidoPaterno");
@@ -54,7 +54,7 @@ public class DatabaseSubject {
 	}
 	
 	//In case of getting multiple subjects 
-	public List<SubjectDTO> getSubjectsWithoutImage(int limit, int offset) throws SQLException {
+	public List<SubjectDTO> getSubjectsWithoutImage(int offset) throws SQLException {
 		List<SubjectDTO> agremiado = new ArrayList<SubjectDTO>();
 		
 		final String sql = "SELECT * FROM subject LIMIT ? OFFSET ?";
@@ -123,7 +123,7 @@ public class DatabaseSubject {
 	}
 	
 	public void addSubjectToDBWithoutImage(SubjectDTO sujeto) throws SQLException {
-		final String sql = "INSERT INTO subject (nreloj, nombre, apellidoPaterno, apellidoMaterno, activado)";
+		final String sql = "INSERT INTO subject (nreloj, nombre, apellidoPaterno, apellidoMaterno, activated) VALUES (?, ?, ?, ?, ?)";
 		
 		var pstmt = conn.prepareStatement(sql);
 		try {
@@ -132,6 +132,7 @@ public class DatabaseSubject {
 			pstmt.setString(3, sujeto.apellidoPaterno);
 			pstmt.setString(4, sujeto.apellidoMaterno);
 			pstmt.setInt(5, sujeto.activated ? 1 : 0);
+			pstmt.executeUpdate();
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -185,10 +186,5 @@ public class DatabaseSubject {
 		var pstmt = conn.prepareStatement(sql);
 		pstmt.setInt(1, nreloj);
 		pstmt.executeUpdate();
-	}
-	
-	//For executing custom SQL  (only for testing)
-	public Connection getConn() {
-		return conn;
 	}
 }

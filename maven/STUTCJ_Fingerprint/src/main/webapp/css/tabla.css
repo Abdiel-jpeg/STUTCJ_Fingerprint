@@ -1,0 +1,161 @@
+  /* Fuentes Apple-like */
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    background: #f5f5f7;
+    padding: 30px 20px;
+    color: #1d1d1f;
+    margin: 0;
+  }
+
+  h2 {
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 30px;
+    font-size: 2rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    font-size: 1rem;
+    transition: box-shadow 0.3s ease;
+  }
+  table:hover {
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.18);
+  }
+
+  thead th {
+    background: linear-gradient(90deg, #f0f0f5 0%, #d9d9e0 100%);
+    color: #3c3c4399;
+    font-weight: 600;
+    padding: 16px 24px;
+    text-align: left;
+    border-bottom: 1px solid #d1d1d6;
+    user-select: none;
+  }
+
+  tbody tr {
+    transition: background-color 0.25s ease, transform 0.15s ease;
+    cursor: default;
+  }
+
+  tbody tr:hover {
+    background-color: #f9f9fb;
+    transform: scale(1.01);
+  }
+
+  tbody td {
+    padding: 16px 24px;
+    border-bottom: 1px solid #e3e3e8;
+    color: #1d1d1f;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .activo {
+    color: #28a745;
+    font-weight: 600;
+  }
+
+  .inactivo {
+    color: #ff3b30;
+    font-weight: 600;
+  }
+
+  button {
+    background-color: #007aff;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 8px 14px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgb(0 122 255 / 0.4);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease,
+      transform 0.1s ease;
+  }
+  button:hover {
+    background-color: #005ecb;
+    box-shadow: 0 6px 12px rgb(0 94 203 / 0.6);
+    transform: scale(1.05);
+  }
+  button:active {
+    transform: scale(0.97);
+  }
+
+  /* Formulario para editar */
+  #editForm {
+    margin-top: 30px;
+    max-width: 480px;
+    background: white;
+    padding: 24px 30px;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    display: none;
+    font-size: 1rem;
+  }
+  #editForm h3 {
+    margin-top: 0;
+    font-weight: 700;
+    color: #1d1d1f;
+    margin-bottom: 20px;
+  }
+
+  #editForm label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #3c3c43cc;
+  }
+
+  #editForm input[type="text"],
+  #editForm input[type="hidden"] {
+    width: 100%;
+    padding: 10px 14px;
+    margin-bottom: 18px;
+    border: 1.5px solid #d1d1d6;
+    border-radius: 12px;
+    font-size: 1rem;
+    color: #1d1d1f;
+    transition: border-color 0.3s ease;
+  }
+  #editForm input[type="text"]:focus {
+    border-color: #007aff;
+    outline: none;
+  }
+
+  #editForm input[type="checkbox"] {
+    width: auto;
+    margin-right: 8px;
+    vertical-align: middle;
+    cursor: pointer;
+  }
+
+  #editForm button[type="submit"] {
+    background-color: #007aff;
+    width: 100%;
+    padding: 12px 0;
+    border-radius: 14px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    box-shadow: 0 5px 15px rgb(0 122 255 / 0.4);
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease,
+      transform 0.1s ease;
+  }
+  #editForm button[type="submit"]:hover {
+    background-color: #005ecb;
+    box-shadow: 0 8px 20px rgb(0 94 203 / 0.6);
+  }
+  #editForm button[type="submit"]:active {
+    transform: scale(0.97);
+  }

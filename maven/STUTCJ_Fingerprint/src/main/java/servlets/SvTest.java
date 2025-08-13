@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jsonTemplates.JsonTemplate;
+import logica.DBConn;
 import logica.DatabaseSubject;
 import logica.HTTPHandling;
 
@@ -13,7 +14,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import com.google.gson.Gson;
 
@@ -26,15 +26,16 @@ public class SvTest extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
+     * @throws ClassNotFoundException 
      * @see HttpServlet#HttpServlet()
      */
-    public SvTest() {
+    public SvTest() throws ClassNotFoundException {
         super();
         // TODO Auto-generated constructor stub
         
         try {
  			this.dbSubject = new DatabaseSubject();
- 		} catch (ClassNotFoundException | SQLException e) {
+ 		} catch (SQLException e) {
  			// TODO Auto-generated catch block
  			e.printStackTrace();
  		}
@@ -72,15 +73,14 @@ public class SvTest extends HttpServlet {
 			break;
 			
 		case "emptySubjectTable":
-			var conn = dbSubject.getConn();
-			final String sql = "DELETE FROM subject WHERE 1=1";
-		
 			try {
+				var conn = DBConn.getConn();
+				final String sql = "DELETE FROM subject WHERE 1=1";
 				var stmt = conn.createStatement();
 				stmt.execute(sql);
 				
 				HTTPHandling.handleResponse(response, "ok", "\"La BBDD fue limpiada exitosamente\"");
-			} catch (SQLException e) {
+			} catch (SQLException | ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				
@@ -90,43 +90,42 @@ public class SvTest extends HttpServlet {
 			break;
 		case "addSubjectsFromCSV":
 			//System.out.println(json.getData());
-			var connCSV = dbSubject.getConn();
-			final String sqlCSV = "INSERT INTO subject (nreloj, nombre, apellidoPaterno, apellidoMaterno) VALUES (?, ?, ?, ?)";
-			
-			BufferedReader reader = new BufferedReader(new StringReader(json.getData()));
-			
-			String line = reader.readLine();
-			
-			while ((line = reader.readLine()) != null) {
-				String[] values = line.split(",");
+			try {
+				var connCSV = DBConn.getConn();
+				final String sqlCSV = "INSERT INTO subject (nreloj, nombre, apellidoPaterno, apellidoMaterno) VALUES (?, ?, ?, ?)";
 				
-				//System.out.println(values[0] + values[1] + values[2] + values[3]);
-				int nreloj = Integer.parseInt(values[0]);
-				String apellidoPaterno = values[1];
-				String apellidoMaterno = values[2];
-				String nombre = values[3];
+				BufferedReader reader = new BufferedReader(new StringReader(json.getData()));
 				
+				String line = reader.readLine();
 				
-				try {
+				while ((line = reader.readLine()) != null) {
+					String[] values = line.split(",");
+					
+					//System.out.println(values[0] + values[1] + values[2] + values[3]);
+					int nreloj = Integer.parseInt(values[0]);
+					String apellidoPaterno = values[1];
+					String apellidoMaterno = values[2];
+					String nombre = values[3];
+					
 					var pstmtCSV = connCSV.prepareStatement(sqlCSV);
 					pstmtCSV.setInt(1, nreloj);
 					pstmtCSV.setString(2, nombre);
 					pstmtCSV.setString(3, apellidoPaterno);
 					pstmtCSV.setString(4, apellidoMaterno);
 					pstmtCSV.executeUpdate();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 					
-					HTTPHandling.handleResponse(response, "error", "\"Error en la BBDD\"");
+					HTTPHandling.handleResponse(response, "ok", "\"Datos añadidos correctamente al a BBDD\"");
 				}
+			} catch (SQLException | ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				
+				HTTPHandling.handleResponse(response, "error", "\"Error en la BBDD\"");
 			}
-			
-			HTTPHandling.handleResponse(response, "ok", "\"Datos añadidos correctamente al a BBDD\"");
 		
 			break;
 		default:
-			HTTPHandling.handleResponse(response, "error", "Opcion no disponible en la API");
+			HTTPHandling.handleResponse(response, "error", "\"Opcion no disponible en la API\"");
 		}
 	}
 

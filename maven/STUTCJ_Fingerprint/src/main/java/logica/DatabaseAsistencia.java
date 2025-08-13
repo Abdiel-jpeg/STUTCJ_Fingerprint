@@ -1,7 +1,6 @@
 package logica;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import com.machinezoo.sourceafis.FingerprintImage;
@@ -9,15 +8,13 @@ import com.machinezoo.sourceafis.FingerprintMatcher;
 import com.machinezoo.sourceafis.FingerprintTemplate;
 
 public class DatabaseAsistencia {
-	private final String url = "jdbc:sqlite:database.db";
 	private Connection conn;
 	public static double threshold = 15;
 
 	public DatabaseAsistencia() throws SQLException, ClassNotFoundException {
 		super();
 		
-		Class.forName("org.sqlite.JDBC");
-		conn = DriverManager.getConnection(url);
+		conn = DBConn.getConn();
 		
 		final String startSQL = "CREATE TABLE IF NOT EXISTS asistencia ("
 				+ "	idEvento INTEGER,"

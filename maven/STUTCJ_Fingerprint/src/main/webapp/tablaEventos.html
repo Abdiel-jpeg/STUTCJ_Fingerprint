@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8" />
+	<title>Tabla de Eventos</title>
+	<script src="scripts/tablaEventos.js"></script>
+	<link rel="stylesheet" href="css/tabla.css">
+</head>
+<body>
+
+<h2>Lista de Eventos</h2>
+<button id='aniadirButton' onClick="location.href='formularioEventoAniadir.html'">Añadir nuevo evento</button>
+<p><label>Buscar:</label><input id='buscarInput' type="text" ></p>
+<table id="eventoTable">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Titulo</th>
+      <th>Descripcion</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>

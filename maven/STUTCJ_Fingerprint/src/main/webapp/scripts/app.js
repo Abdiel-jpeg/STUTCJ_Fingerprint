@@ -15,21 +15,6 @@ var FingerprintSdkTest = (function () {
 			encodedImage = window.btoa(Fingerprint.b64UrlToUtf8(samples[0]));
             image.src = "data:image/png;base64," + encodedImage;
             _instance.resultList.appendChild(image);
-			
-			/*const jsonQuery = {
-				option: "setImage",
-				data: encodedImage
-			};
-			
-			const fetchImage = async () => {
-				const url = "http://192.168.1.13:9001/STUTCJ_Fingerprint_Server/SvAsistencia";
-				const response = await fetch(url, getQueryParams('POST', jsonQuery));
-				const json = await response.json();
-				console.log(json);
-			}
-			
-			fetchImage();*/
-
         };
         this.element = element;
         var btnEnum = document.createElement("button");

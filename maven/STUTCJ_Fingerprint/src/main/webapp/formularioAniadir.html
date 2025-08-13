@@ -1,0 +1,28 @@
+<!Doctype HTML>
+
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Añadir nuevo sujeto</title>
+		<script src="sdk/es6-shim.js"></script>
+    	<script src="sdk/websdk.client.bundle.min.js"></script>
+   		<script src="sdk/fingerprint.sdk.min.js"></script>
+		<script src="scripts/fetchParams.js"></script>
+		<script src="scripts/formularioAniadir.js"></script>
+		<script src="scripts/app.js"></script>
+	</head>
+	
+	<body>
+		<div class="subject-form">
+			<h2>Añadir nuevo sujeto</h2>
+			<p><label>N. Reloj:</label><input type="text" name="nreloj"/></p>
+			<p><label>Nombre(s):</label><input type="text" name="nombre"/></p>
+			<p><label>Apellido Paterno:</label><input type="text" name="apellidoPaterno"/></p>
+			<p><label>Apellido Materno:</label><input type="text" name="apellidoMaterno"/></p>
+			<p> <label>Añadir imagen dactilar:</label></p> 
+			<div id="content"></div>
+			<p><label>Estadod de activación:</label><input type="text" name="estadoActivacion"/></p>
+			<button id="añdir">Añadir</button>
+		</div>
+	</body>
+</html>

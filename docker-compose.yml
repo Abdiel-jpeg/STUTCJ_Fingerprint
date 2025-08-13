@@ -2,7 +2,7 @@ services:
   maventest:
     build: ./maven
     volumes:
-      - ./tomcat/STUTCJ_Fingerprint_Server.war:/tmp/target/STUTCJ_Fingerprint_Server.war
+      - "./tomcat/STUTCJ_Fingerprint_Server.war:/tmp/target/STUTCJ_Fingerprint_Server.war"
   tomcattest:
     build: ./tomcat
     depends_on:

@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jsonTemplates.confJsonTemplate;
 import logica.DatabaseAsistencia;
+import logica.DatabaseSubject;
 import logica.HTTPHandling;
 import logica.Conf;
 
@@ -36,7 +37,7 @@ public class SvConf extends HttpServlet {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		
-		var jsonStr = new Gson().toJson(new Conf(DatabaseAsistencia.threshold));
+		var jsonStr = new Gson().toJson(new Conf(DatabaseAsistencia.threshold, DatabaseSubject.limit));
 		
 		HTTPHandling.handleResponse(response, "ok", jsonStr);
 	}
@@ -52,6 +53,7 @@ public class SvConf extends HttpServlet {
 		
 		//DatabaseAsistencia.threshold = Double.parseDouble(request.getParameter("threshold"));
 		DatabaseAsistencia.threshold = json.getThreshold();
+		DatabaseSubject.limit = json.getLimit();
 		
 		HTTPHandling.handleResponse(response, "ok", "\"Configuracion actualizada correctamente\"");
 	}

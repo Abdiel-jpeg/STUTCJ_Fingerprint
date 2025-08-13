@@ -22,7 +22,6 @@ import logica.HTTPHandling;
  */
 @WebServlet("/SvEvento")
 public class SvEvento extends HttpServlet implements Servlet {
-	private DatabaseEvento dbEvento;
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -31,13 +30,6 @@ public class SvEvento extends HttpServlet implements Servlet {
     public SvEvento() {
         super();
         // TODO Auto-generated constructor stub
-        
-        try {
-			this.dbEvento = new DatabaseEvento();
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
     }
 
 	/**
@@ -61,11 +53,11 @@ public class SvEvento extends HttpServlet implements Servlet {
 			
 			//If the client sends nreloj 0 means that wants to retrieave all subjects from database
 			if (id == 0) {
-				var sujetos = dbEvento.getEventos(limit, offset);
+				var sujetos = DatabaseEvento.getEventos(limit, offset);
 				json = new Gson().toJson(sujetos);
 				
 			} else {
-				var sujeto = dbEvento.getEvento(id);
+				var sujeto = DatabaseEvento.getEvento(id);
 				json = new Gson().toJson(sujeto);
 			}
 			
@@ -75,10 +67,10 @@ public class SvEvento extends HttpServlet implements Servlet {
 			out.print(json);
 			out.flush();
 			
-		} catch (SQLException e) {
+		} catch (SQLException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			HTTPHandling.handleResponse(response, "error", "Error en el servidor: " + e.getMessage());
+			HTTPHandling.handleResponse(response, "error", "\"Error en el servidor: " + e.getMessage() + "\"");
 		}
 		
 	}
@@ -96,22 +88,25 @@ public class SvEvento extends HttpServlet implements Servlet {
 		try {
 			switch(json.getOpcion()) {
 			case "eventoDelete":
-				dbEvento.deleteEvento(Integer.parseInt(json.getId()));
+				DatabaseEvento.deleteEvento(Integer.parseInt(json.getId()));
 				
+				HTTPHandling.handleResponse(response, "ok", "\"Evento eliminado correctamente\"");
 				break;
 			case "eventoUpdate":
-				dbEvento.updateEvento(new Evento(Integer.parseInt(json.getId()), json.getTitulo(), json.getDescripcion()), Integer.parseInt(json.getId()));
+				DatabaseEvento.updateEvento(new Evento(Integer.parseInt(json.getId()), json.getTitulo(), json.getDescripcion()), Integer.parseInt(json.getId()));
 				
+				HTTPHandling.handleResponse(response, "ok", "\"Evento actualizado correctamente\"");
 				break;
 				
 			case "eventoAdd":
-				dbEvento.addEvento(json.getTitulo(), json.getDescripcion());
+				DatabaseEvento.addEvento(json.getTitulo(), json.getDescripcion());
 				
+				HTTPHandling.handleResponse(response, "ok", "\"Evento añadido correctamente\"");
 				break;
 			default:
-				HTTPHandling.handleResponse(response, "error", "No existe tal opcion. Opciones disponibles: eventoDelete, eventoUpdate, eventoAdd");
+				HTTPHandling.handleResponse(response, "error", "\"No existe tal opcion. Opciones disponibles: eventoDelete, eventoUpdate, eventoAdd\"");
 			}
-		} catch (SQLException e) {
+		} catch (SQLException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

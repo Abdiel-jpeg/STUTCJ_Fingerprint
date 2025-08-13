@@ -35,7 +35,7 @@ public class SvSubject extends HttpServlet {
         // TODO Auto-generated constructor stub
         try {
 			this.dbSubject = new DatabaseSubject();
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -50,19 +50,17 @@ public class SvSubject extends HttpServlet {
 		
 		try {
 			String nrelojStr = request.getParameter("nreloj");
-			String limitStr = request.getParameter("limit");
 			String offsetStr = request.getParameter("offset");
 			
 			//Handle abscence of limit and offset
 			int nreloj = (nrelojStr != null) ? Integer.parseInt(nrelojStr) : 0;
-			int limit = (limitStr != null) ? Integer.parseInt(limitStr) : 0;
 			int offset = (offsetStr != null) ? Integer.parseInt(offsetStr) : 1;
 			
 			String json;
 			
 			//If the client sends nreloj 0 means that wants to retrieave all subjects from database
 			if (nreloj == 0) {
-				var sujetos = dbSubject.getSubjectsWithoutImage(limit, offset);
+				var sujetos = dbSubject.getSubjectsWithoutImage(offset);
 				json = new Gson().toJson(sujetos);
 				
 			} else {
@@ -80,7 +78,7 @@ public class SvSubject extends HttpServlet {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			HTTPHandling.handleResponse(response, "error", "Error en el servidor: " + e.getMessage());
+			HTTPHandling.handleResponse(response, "error", "\"Error en el servidor: \"" + e.getMessage());
 		}
 		
 	}
@@ -101,7 +99,7 @@ public class SvSubject extends HttpServlet {
 				dbSubject.deleteSubject(json.getNreloj());
 				
 				
-				HTTPHandling.handleResponse(response, "ok", "Se ha eliminado con exito el sujeto");
+				HTTPHandling.handleResponse(response, "ok", "\"Se ha eliminado con exito el sujeto\"");
 				break;
 			case "subjectUpdate":
 				dbSubject.updateSubject(new Subject(json.getNreloj(), 
@@ -111,7 +109,7 @@ public class SvSubject extends HttpServlet {
 						Base64.getDecoder().decode(new String(json.getFingerprintImage().getBytes("UTF-8"))),
 						json.getActivado() >= 1 ? true : false), json.getUpdateSelector());
 				
-				HTTPHandling.handleResponse(response, "ok", "se ha actualizado el sujeto con exito");
+				HTTPHandling.handleResponse(response, "ok", "\"se ha actualizado el sujeto con exito\"");
 				
 				break;
 			case "subjectUpdateWithoutImage":
@@ -121,7 +119,7 @@ public class SvSubject extends HttpServlet {
 						json.getApellidoMaterno(),
 						json.getActivado() >= 1 ? true : false), json.getUpdateSelector());
 				
-				HTTPHandling.handleResponse(response, "ok", "se ha actualizado el sujeto con exito");
+				HTTPHandling.handleResponse(response, "ok", "\"se ha actualizado el sujeto con exito\"");
 				
 				break;
 			case "subjectAdd":
@@ -132,7 +130,7 @@ public class SvSubject extends HttpServlet {
 						Base64.getDecoder().decode(new String(json.getFingerprintImage().getBytes("UTF-8"))),
 						json.getActivado() >= 1 ? true: false));
 				
-				HTTPHandling.handleResponse(response, "ok", "se ha añadido el sujeto con exito");
+				HTTPHandling.handleResponse(response, "ok", "\"se ha añadido el sujeto con exito\"");
 				
 				break;
 			case "subjectAddWithoutImage":
@@ -142,19 +140,19 @@ public class SvSubject extends HttpServlet {
 						json.getApellidoMaterno(),
 						json.getActivado() >= 1 ? true : false));
 				
-				HTTPHandling.handleResponse(response, "ok", "se ha añadido el sujeto con exito");
+				HTTPHandling.handleResponse(response, "ok", "\"se ha añadido el sujeto con exito\"");
 				
 				break;
 			default:
-				HTTPHandling.handleResponse(response, "error", "No existe tal opcion. Opciones disponibles: subjectDelete, subjectUpdate, "
-						+ "subjectUpdateWithoutImage, subjectAdd, subjectAddWithoutImage");
+				HTTPHandling.handleResponse(response, "error", "\"No existe tal opcion. Opciones disponibles: subjectDelete, subjectUpdate, "
+						+ "subjectUpdateWithoutImage, subjectAdd, subjectAddWithoutImage\"");
 			}
 				
 		} catch (NumberFormatException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			
-			HTTPHandling.handleResponse(response, "error", "ups, ha sucedido un error");
+			HTTPHandling.handleResponse(response, "error", "\"ups, ha sucedido un error\"");
 		}
 	}
 }

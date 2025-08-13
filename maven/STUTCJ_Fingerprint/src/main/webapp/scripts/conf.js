@@ -7,10 +7,11 @@ const getConf = async () => {
 	return json;
 }
 
-const setConf = async (threshold) => {
+const setConf = async (threshold, limit) => {
 	const query = {
-		"threshold": threshold
-	}
+		"threshold": threshold,
+		"limit": limit
+	};
 	
 	const response = await fetch('SvConf', getQueryParams('POST', query));
 	const json = await response.json();
@@ -32,11 +33,12 @@ const specialConfiguration = async (option, data) => {
 
 window.addEventListener("load", async () => {
 	let inputThreshold = document.getElementById("threshold");
+	let inputLimit = document.getElementById("limit");
 	
 	document.getElementById("submitButton").addEventListener("click", async (e) => {
 		e.preventDefault();
 		
-		await setConf(inputThreshold.value);
+		await setConf(inputThreshold.value, inputLimit.value);
 		
 		window.location.reload();
 	})
@@ -52,18 +54,21 @@ window.addEventListener("load", async () => {
 		const response = await specialConfiguration("addSubjectsFromCSV", text);
 	
 		console.log(response);
+		alert(response.message);
 	});
 	
 	
 	document.getElementById("borrarTodo").addEventListener("click", async () => {
 		const response = await specialConfiguration("emptySubjectTable", "");
 		
-		console.log(response); 
+		console.log(response);
+		alert(response.message);
 	})
 	
 	let data = await getConf();
 	
 	console.log(data);
 	
-	inputThreshold.value = data.message.threshold
+	inputThreshold.value = data.message.threshold;
+	inputLimit.value = data.message.limit;
 });

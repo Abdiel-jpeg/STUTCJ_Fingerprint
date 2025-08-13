@@ -1,23 +1,18 @@
 package logica;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseEvento {
-	private final String url = "jdbc:sqlite:database.db";
-	private Connection conn;
+	private static Connection conn;
 
-	public DatabaseEvento() throws SQLException, ClassNotFoundException {
-		super();
-		
-		Class.forName("org.sqlite.JDBC");
-		conn = DriverManager.getConnection(url);
+	public static void initializeDatabase() throws SQLException, ClassNotFoundException {
+		conn = DBConn.getConn();
 		
 		final String startSQL = "CREATE TABLE IF NOT EXISTS evento ("
-				+ "	id INTEGER PRIMARY KEY NOT NULL,"
+				+ "	id INTEGER PRIMARY KEY AUTO_INCREMENT NOT NULL,"
 				+ "	titulo VARCHAR(255) NOT NULL,"
 				+ "	descripcion VARCHAR(255)"
 				+ ");";
@@ -27,13 +22,15 @@ public class DatabaseEvento {
 	}
 	
 	//Get only one event
-	public Evento getEvento(int id) throws SQLException {
+	public static Evento getEvento(int id) throws SQLException, ClassNotFoundException {
+		initializeDatabase();
 		final String sql = "SELECT * FROM evento WHERE id=?";
 		
 		var pstmt = conn.prepareStatement(sql);
 		pstmt.setInt(1, id);
 		var rs = pstmt.executeQuery();
 		
+		rs.next();
 		String nombre = rs.getString("titulo");
 		String descripcion = rs.getString("descripcion");
 		
@@ -41,7 +38,8 @@ public class DatabaseEvento {
 	}
 	
 	//Return multiple events
-	public List<Evento> getEventos(int limit, int offset) throws SQLException {
+	public static List<Evento> getEventos(int limit, int offset) throws SQLException, ClassNotFoundException {
+		initializeDatabase();
 		List<Evento> eventos = new ArrayList<Evento>();
 		
 		final String sql = "SELECT * FROM evento LIMIT ? OFFSET ?";
@@ -63,7 +61,8 @@ public class DatabaseEvento {
 	}
 	
 	//Create new event
-	public void addEvento(String titulo, String descripcion) throws SQLException {
+	public static void addEvento(String titulo, String descripcion) throws SQLException, ClassNotFoundException {
+		initializeDatabase();
 		final String sql = "INSERT INTO evento (titulo, descripcion) VALUES (?, ?)";
 		
 		var pstmt = conn.prepareStatement(sql);
@@ -73,21 +72,20 @@ public class DatabaseEvento {
 	}
 	
 	//Update events
-	public void updateEvento(Evento event, int id) throws SQLException {
-		final String sql = "UPDATE evento SET id=?,"
-				+ "	titulo=?,"
-				+ "	descripcion=?"
-				+ "	WHERE id=?";
+	public static void updateEvento(Evento event, int id) throws SQLException, ClassNotFoundException {
+		initializeDatabase();
+		final String sql = "UPDATE evento SET titulo=?, descripcion=? WHERE id=?";
 		
 		var pstmt = conn.prepareStatement(sql);
-		pstmt.setInt(1, event.getId());
 		pstmt.setString(1, event.getTitulo());
-		pstmt.setString(1, event.getDescripcion());
+		pstmt.setString(2, event.getDescripcion());
+		pstmt.setInt(3, event.getId());
 		pstmt.executeUpdate();
 	}
 	
 	//Delete event
-	public void deleteEvento(int id) throws SQLException {
+	public static void deleteEvento(int id) throws SQLException, ClassNotFoundException {
+		initializeDatabase();
 		final String sql = "DELETE FROM evento WHERE id=?";
 		
 		var pstmt = conn.prepareStatement(sql);

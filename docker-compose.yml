@@ -1,12 +1,31 @@
 services:
-  maventest:
-    build: ./maven
+  db:
+    image: mysql:8.4.0-oraclelinux8
+    restart: always
+    env_file:
+      - "db.env"
     volumes:
-      - "./tomcat/STUTCJ_Fingerprint_Server.war:/tmp/target/STUTCJ_Fingerprint_Server.war"
+      - "db_data:/var/lib/mysql"
+    ports:
+      - "9006:3306"
+  maventest:
+    image: maven
+    volumes:
+      - "./maven_repo:/root/.m2"
+      - "${PWD}:/usr/src/mymaven"
+    working_dir: /usr/src/mymaven
+    entrypoint: ["/usr/local/bin/mvn-entrypoint.sh"]
+    command: ["mvn", "clean", "install"]
   tomcattest:
-    build: ./tomcat
+    image: tomcat
+    env_file:
+      - "db.env"
     depends_on:
       maventest:
         condition: service_completed_successfully
     ports:
       - "8888:8080"
+    volumes:
+      - "./target/STUTCJ_Fingerprint_Server.war:/usr/local/tomcat/webapps/STUTCJ_Fingerprint_Server.war"
+volumes:
+  db_data:

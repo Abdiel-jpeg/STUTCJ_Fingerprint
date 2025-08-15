@@ -7,10 +7,12 @@ const getConf = async () => {
 	return json;
 }
 
-const setConf = async (threshold, limit) => {
+const setConf = async (threshold, limitAgremiado, limitEvento, limitAsistencia) => {
 	const query = {
 		"threshold": threshold,
-		"limit": limit
+		"limitAgremiado": limitAgremiado,
+		"limitEvento": limitEvento,
+		"limitAsistencia": limitAsistencia
 	};
 	
 	const response = await fetch('SvConf', getQueryParams('POST', query));
@@ -29,16 +31,20 @@ const specialConfiguration = async (option, data) => {
 	return json;
 }
 
-
-
 window.addEventListener("load", async () => {
 	let inputThreshold = document.getElementById("threshold");
-	let inputLimit = document.getElementById("limit");
+	let inputLimitAgremiado = document.getElementById("limitAgremiado");
+	let inputLimitEvento = document.getElementById("limitEvento");
+	let inputLimitAsistencia = document.getElementById("limitAsistencia");
 	
 	document.getElementById("submitButton").addEventListener("click", async (e) => {
 		e.preventDefault();
 		
-		await setConf(inputThreshold.value, inputLimit.value);
+		await setConf(inputThreshold.value, 
+			inputLimitAgremiado.value,
+			inputLimitEvento,
+			inputLimitAsistencia
+			);
 		
 		window.location.reload();
 	})

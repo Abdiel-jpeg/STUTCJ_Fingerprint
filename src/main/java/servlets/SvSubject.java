@@ -5,7 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jsonTemplates.subjectJsonTemplate;
+import jsonTemplates.SubjectJsonTemplate;
 import logica.DatabaseSubject;
 import logica.HTTPHandling;
 import logica.Subject;
@@ -89,7 +89,7 @@ public class SvSubject extends HttpServlet {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
 		
-		var json = new Gson().fromJson(HTTPHandling.getBody(request), subjectJsonTemplate.class);
+		var json = new Gson().fromJson(HTTPHandling.getBody(request), SubjectJsonTemplate.class);
 		
 		try {
 			switch(json.getOpcion()) {

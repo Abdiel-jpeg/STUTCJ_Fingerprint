@@ -1,5 +1,5 @@
 function loadSubjects() {
-  fetch("SvEvento?offset=0&limit=100")
+  fetch("SvEvento?offset=0")
     .then((res) => res.json())
     .then((eventos) => {
       const tbody = document.querySelector("#eventoTable tbody");

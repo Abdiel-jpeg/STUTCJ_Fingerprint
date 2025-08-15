@@ -12,7 +12,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jsonTemplates.eventoJsonTemplate;
+import jsonTemplates.EventoJsonTemplate;
 import logica.DatabaseEvento;
 import logica.Evento;
 import logica.HTTPHandling;
@@ -41,19 +41,17 @@ public class SvEvento extends HttpServlet implements Servlet {
 		
 		try {
 			String idStr = request.getParameter("id");
-			String limitStr = request.getParameter("limit");
 			String offsetStr = request.getParameter("offset");
 			
 			//Handle abscence of limit and offset
 			int id = (idStr != null) ? Integer.parseInt(idStr) : 0;
-			int limit = (limitStr != null) ? Integer.parseInt(limitStr) : 0;
 			int offset = (offsetStr != null) ? Integer.parseInt(offsetStr) : 1;
 			
 			String json;
 			
 			//If the client sends nreloj 0 means that wants to retrieave all subjects from database
 			if (id == 0) {
-				var sujetos = DatabaseEvento.getEventos(limit, offset);
+				var sujetos = DatabaseEvento.getEventos(offset);
 				json = new Gson().toJson(sujetos);
 				
 			} else {
@@ -82,7 +80,7 @@ public class SvEvento extends HttpServlet implements Servlet {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
 		
-		var json = new Gson().fromJson(HTTPHandling.getBody(request), eventoJsonTemplate.class);
+		var json = new Gson().fromJson(HTTPHandling.getBody(request), EventoJsonTemplate.class);
 		System.out.print(json);
 		
 		try {

@@ -7,6 +7,7 @@ import java.util.List;
 
 public class DatabaseEvento {
 	private static Connection conn;
+	public static int limit = 10;
 
 	public static void initializeDatabase() throws SQLException, ClassNotFoundException {
 		conn = DBConn.getConn();
@@ -38,7 +39,7 @@ public class DatabaseEvento {
 	}
 	
 	//Return multiple events
-	public static List<Evento> getEventos(int limit, int offset) throws SQLException, ClassNotFoundException {
+	public static List<Evento> getEventos(int offset) throws SQLException, ClassNotFoundException {
 		initializeDatabase();
 		List<Evento> eventos = new ArrayList<Evento>();
 		

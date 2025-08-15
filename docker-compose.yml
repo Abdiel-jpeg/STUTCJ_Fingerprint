@@ -15,7 +15,8 @@ services:
       - "${PWD}:/usr/src/mymaven"
     working_dir: /usr/src/mymaven
     entrypoint: ["/usr/local/bin/mvn-entrypoint.sh"]
-    command: ["mvn", "clean", "install"]
+    #command: ["mvn", "clean", "install"]
+    command: ["mvn", "install"]
   tomcattest:
     image: tomcat
     env_file:

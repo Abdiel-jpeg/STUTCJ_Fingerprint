@@ -1,6 +1,6 @@
 package jsonTemplates;
 
-public class eventoJsonTemplate {
+public class EventoJsonTemplate {
 	private String opcion;
 	private String id;
 	private String titulo;

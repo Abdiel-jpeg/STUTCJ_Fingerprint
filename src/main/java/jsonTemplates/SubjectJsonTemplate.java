@@ -1,6 +1,6 @@
 package jsonTemplates;
 
-public class subjectJsonTemplate {
+public class SubjectJsonTemplate {
 	private String opcion,
 		nombre,
 		apellidoPaterno,

@@ -26,19 +26,19 @@ MYSQL_DATABASE = os.environ['MYSQL_DATABASE']
 MYSQL_USER = os.environ['MYSQL_USER']
 MYSQL_PASSWORD = os.environ['MYSQL_PASSWORD']
 
-#Connectoin to db
-mydb = mysql.connector.connect(
-    host='db',
-    database=MYSQL_DATABASE,
-    user=MYSQL_USER,
-    password=MYSQL_PASSWORD,
-    port=3306
-)
-
 app = Flask(__name__)
 
 @app.route('/')
 def index():
+    #Connectoin to db
+    mydb = mysql.connector.connect(
+        host='db',
+        database=MYSQL_DATABASE,
+        user=MYSQL_USER,
+        password=MYSQL_PASSWORD,
+        port=3306
+    )
+       
     # --------------------- Get all the foking data ---------------
     mycursor = mydb.cursor()
     mycursor.execute("SELECT nreloj, nombre, apellidoPaterno, apellidoMaterno FROM subject")

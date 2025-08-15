@@ -1,14 +1,56 @@
 
-const sendFingerprintImage = async (encodedImage) => {
+let selectedId;
+
+const fetchEvento = async () => {
+	const response = await fetch('SvEvento?offset=0');
+	const json = await response.json();
+	return json;
+}
+
+const fetchFingerprintImage = async (encodedImage, idEvento) => {
 	const query = {
-		"option": "sendFingerprintImage",
-		"data": encodedImage
+		"option": "fingerprintImage",
+		"encodedImage": encodedImage,
+		"idEvento": idEvento,
+		"nreloj": 0
 	}
 	
 	console.log(query);
 	const response = await fetch('SvAsistencia', getQueryParams('POST', query));
 	const json = await response.json();
 	return json;
+}
+
+const addEventosToSelect = async () => {
+    let data = await fetchEvento();
+    let selectEvento = document.getElementById('selectEvento');
+
+    //Add initial value
+    let defaultValue = document.createElement("option");
+    defaultValue.value = "Selecciona el evento";
+    defaultValue.selected;
+    defaultValue.disabled;
+
+    selectEvento.appendChild(defaultValue);
+
+    for (let i = 0; i < data.length; i++) {
+		let titulo = data[i].titulo;
+		let optionEvento = document.createElement('option');
+
+		optionEvento.setAttribute('value', titulo);
+		optionEvento.appendChild(document.createTextNode(titulo));
+
+		selectEvento.appendChild(optionEvento);
+	}
+	
+	selectEvento.addEventListener("change", (e) => {
+		for (let i=0; i < data.length; i++) {
+			evento = data[i];
+			if (evento.titulo == e.target.selectedOptions[0].value) {
+			  selectedId = evento.id;
+			}
+		  }
+  });
 }
 
 window.addEventListener("load", () => {
@@ -25,11 +67,16 @@ window.addEventListener("load", () => {
 		  let fingerprintImage = document.getElementsByClassName("fingerprintImage")[0];
 		  
 		  if (fingerprintImage != undefined) {
-			let response = await sendFingerprintImage(encodedImage);
+			let response = await fetchFingerprintImage(encodedImage, selectedId);
 			console.log(response);
-			
-			alert("Asistencia tomada para: " + response.message.nombre + " " + response.message.apellidoPaterno 
+
+			if (response.message == null) {
+				alert("No se reconocío su huella dactilar, por favor intente de nuevo");
+
+			} else {
+				alert("Asistencia tomada para: " + response.message.nombre + " " + response.message.apellidoPaterno 
 				+ " " + response.message.apellidoMaterno + ". Nreloj:  " + response.message.nreloj);
+			}
 		  }
 		  
 	    } else if (mutation.type === "attributes") {
@@ -43,4 +90,6 @@ window.addEventListener("load", () => {
 
 	// Start observing the target node for configured mutations
 	observer.observe(targetNode, config);
+
+	addEventosToSelect();
 });

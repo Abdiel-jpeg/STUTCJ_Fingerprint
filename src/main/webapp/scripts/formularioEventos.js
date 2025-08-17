@@ -4,13 +4,13 @@ let updateSelector;
 
 //---------------------- Area API -------------------
 
-const getEvento = async (id) => {
+const fetchGetEvento = async (id) => {
 	const response = await fetch('SvEvento?id=' + id, getParams);
 	const json = await response.json();
 	return json;
 }
 
-const updateEvento = async (id, titulo, descripcion) => {
+const fetchUpdateEvento = async (id, titulo, descripcion) => {
 	const query = {
 		"opcion": "eventoUpdate",
 		"id": id,
@@ -22,7 +22,7 @@ const updateEvento = async (id, titulo, descripcion) => {
 	return json;
 }
 
-const deleteEvento = async (id) => {
+const fetchDeleteEvento = async (id) => {
 	const query = {
 		"id": id
 	};
@@ -38,7 +38,8 @@ const insertData = async (eventoForm) => {
 	const queryString = window.location.search;
 	const params = new URLSearchParams(queryString);
 	const id = params.get("id");
-	const data = await getEvento(id);
+	const data = await fetchGetEvento
+(id);
 	inputs = eventoForm.querySelectorAll("input");
 
 	updateSelector = data.id;
@@ -57,10 +58,21 @@ window.addEventListener("load", async () => {
 		let titulo = inputs[0].value;
 		let descripcion = inputs[1].value;
 		
-		let response = await updateEvento(updateSelector, titulo, descripcion);
+		let response = await fetchUpdateEvento(updateSelector, titulo, descripcion);
 		console.log(response);
 		alert(response.message);
-		})
+		location.href = "tablaEventos.html";
+	});
+
+	document.getElementById('eliminar').addEventListener("click", async () => {
+		if (!window.confirm("¿Está seguro de eliminar este evento? Todas las asistencias incluidas serán eliminadas también")) {
+			return;
+		}
+
+		const response = await fetchDeleteEvento(updateSelector);
+		alert(response.message);
+		location.href = tablaEventos.html;
+	})
 
 	insertData(eventoForm)
 })

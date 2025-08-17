@@ -26,39 +26,41 @@ const fetchDelAsistencia = async (idEvento, nreloj) => {
 }
 
 const addEventosToSelect = async () => {
-    let data = await fetchEvento()
+    let { eventos } = await fetchEvento()
     let selectEvento = document.getElementById('selectEvento');
     let selectedId;
 
     //Add initial value
     let defaultValue = document.createElement("option");
     defaultValue.value = "Selecciona el evento";
-    defaultValue.selected;
-    defaultValue.disabled;
+    defaultValue.selected = true;
+    defaultValue.disabled = true;
 
     selectEvento.appendChild(defaultValue);
 
-    for (let i = 0; i < data.length; i++) {
-		let titulo = data[i].titulo;
+    for (let i = 0; i < eventos.length; i++) {
+		let titulo = eventos[i].titulo;
 		let optionEvento = document.createElement('option');
 
 		optionEvento.setAttribute('value', titulo);
+    optionEvento.setAttribute('id', eventos[i].id);
 		optionEvento.appendChild(document.createTextNode(titulo));
 
 		selectEvento.appendChild(optionEvento);
 	}
 
   selectEvento.addEventListener("change", (e) => {
-    console.log(e.target.selectedOptions[0].value);
+    //console.log(e.target.selectedOptions[0].value);
 
-    for (let i=0; i < data.length; i++) {
+    /*for (let i=0; i < data.length; i++) {
       evento = data[i];
       if (evento.titulo == e.target.selectedOptions[0].value) {
         selectedId = evento.id;
       }
-    }
+    }*/
 
-  insertSubjects(selectedId, offset);
+    selectedId = e.target.selectedOptions[0].id;
+    insertSubjects(selectedId, offset);
   });
 }
 
@@ -84,6 +86,7 @@ const insertSubjects = async (idEvento, offset) => {
       let response = await fetchDelAsistencia(idEvento, s.nreloj);
       console.log(response);
       alert(response.message);
+      reload();
     })
 
   tbody.appendChild(row);

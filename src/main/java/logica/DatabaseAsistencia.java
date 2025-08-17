@@ -11,12 +11,15 @@ import com.machinezoo.sourceafis.FingerprintTemplate;
 
 public class DatabaseAsistencia {
 	private Connection conn;
+	private Crypto crypto;
 	public static double threshold = 15;
 	public static int limit = 50;
 
 	public DatabaseAsistencia() throws SQLException, ClassNotFoundException {
 		super();
 		
+		crypto = new Crypto();
+
 		conn = DBConn.getConn();
 		
 		final String startSQL = "CREATE TABLE IF NOT EXISTS asistencia ("

@@ -60,6 +60,16 @@ public class DatabaseEvento {
 		
 		return eventos;
 	}
+
+	public static int getCount() throws SQLException {
+		final String sql = "SELECT COUNT(*) AS count FROM subject";
+	
+		var stmt = conn.createStatement();
+		var rs = stmt.executeQuery(sql);
+		rs.next();
+	
+		return rs.getInt("count");
+	  }
 	
 	//Create new event
 	public static void addEvento(String titulo, String descripcion) throws SQLException, ClassNotFoundException {
@@ -87,10 +97,17 @@ public class DatabaseEvento {
 	//Delete event
 	public static void deleteEvento(int id) throws SQLException, ClassNotFoundException {
 		initializeDatabase();
-		final String sql = "DELETE FROM evento WHERE id=?";
+		final String sqlEvento = "DELETE FROM evento WHERE id=?";
+		final String sqlAsistencia = "DELETE FROM asistencia WHERE idEvento = ?";
 		
-		var pstmt = conn.prepareStatement(sql);
-		pstmt.setInt(1, id);
-		pstmt.executeUpdate();
+		//First delete all dependencies in foreign keys
+		var pstmtAsistencia = conn.prepareStatement(sqlAsistencia);
+		pstmtAsistencia.setInt(1, id);
+		pstmtAsistencia.executeUpdate();
+
+		//Last delete evento itslef
+		var pstmtEvento = conn.prepareStatement(sqlEvento);
+		pstmtEvento.setInt(1, id);
+		pstmtEvento.executeUpdate();
 	}
 }

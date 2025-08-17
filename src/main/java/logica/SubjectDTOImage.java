@@ -9,14 +9,15 @@ public class SubjectDTOImage {
 	public String apellidoMaterno;
 	public String fingerprintImage;
 	public boolean activated;
+	private final Crypto crypto = new Crypto();
 	
-	public SubjectDTOImage(int nreloj, String nombre, String apellidoPaterno, String apellidoMaterno, byte[] encodedImage, boolean activated) {
+	public SubjectDTOImage(int nreloj, String nombre, String apellidoPaterno, String apellidoMaterno, byte[] encodedImage, boolean activated) throws Exception {
 		super();
 		this.nreloj = nreloj;
 		this.nombre = nombre;
 		this.apellidoPaterno = apellidoPaterno;
 		this.apellidoMaterno = apellidoMaterno;
-		this.fingerprintImage = new String(Base64.getEncoder().encode(encodedImage));
+		this.fingerprintImage = new String(Base64.getEncoder().encode(crypto.decryptImage(encodedImage)));
 		this.activated = activated;
 	}
 

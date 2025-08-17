@@ -14,16 +14,18 @@ public class Subject {
 	private boolean activated;
 	//An instance for options for Digital Persona 45000 Fingerprint Reader with 512 DPI images
 	private final FingerprintImageOptions options = new FingerprintImageOptions().dpi(512); 
+	private final Crypto crypto = new Crypto();
 	
 	//Constructor for retreaving subjects from database
 	public Subject(int nreloj, String nombre, String apellidoPaterno, String apellidoMaterno, byte[] image,
-			byte[] template, boolean activated) {
+			byte[] template, boolean activated) throws Exception {
 		super();
+		
 		this.nreloj = nreloj;
 		this.nombre = nombre;
 		this.apellidoPaterno = apellidoPaterno;
 		this.apellidoMaterno = apellidoMaterno;
-		this.image = image;
+		this.image = crypto.decryptImage(image);
 		this.template = new FingerprintTemplate(new FingerprintImage(this.image, options));
 		this.activated = activated;
 	}
@@ -42,14 +44,14 @@ public class Subject {
 	}
 
 	//This constructor method is called to build the template in case it's not given
-	public Subject(int nreloj, String nombre, String apellidoPaterno, String apellidoMaterno, byte[] image, boolean activated) {
+	public Subject(int nreloj, String nombre, String apellidoPaterno, String apellidoMaterno, byte[] image, boolean activated) throws Exception {
 		super();
 		this.nreloj = nreloj;
 		this.nombre = nombre;
 		this.apellidoPaterno = apellidoPaterno;
 		this.apellidoMaterno = apellidoMaterno;
-		this.image = image;
-		this.template = new FingerprintTemplate(new FingerprintImage(this.image, options));
+		this.image = crypto.encryptImage(image);
+		this.template = new FingerprintTemplate(new FingerprintImage(image, options));
 		this.activated = activated;
 	}
 

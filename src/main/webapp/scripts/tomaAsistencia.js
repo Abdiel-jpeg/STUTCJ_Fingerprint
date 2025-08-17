@@ -22,34 +22,31 @@ const fetchFingerprintImage = async (encodedImage, idEvento) => {
 }
 
 const addEventosToSelect = async () => {
-    let data = await fetchEvento();
+    let { eventos } = await fetchEvento();
+	console.log(eventos)
     let selectEvento = document.getElementById('selectEvento');
 
-    //Add initial value
-    let defaultValue = document.createElement("option");
-    defaultValue.value = "Selecciona el evento";
-    defaultValue.selected;
-    defaultValue.disabled;
-
-    selectEvento.appendChild(defaultValue);
-
-    for (let i = 0; i < data.length; i++) {
-		let titulo = data[i].titulo;
+    for (let i = 0; i < eventos.length; i++) {
+		let titulo = eventos[i].titulo;
+		selectedId = eventos[i].id;
 		let optionEvento = document.createElement('option');
 
 		optionEvento.setAttribute('value', titulo);
+		optionEvento.setAttribute('id', selectedId)
+		optionEvento.selected = true;
 		optionEvento.appendChild(document.createTextNode(titulo));
 
 		selectEvento.appendChild(optionEvento);
 	}
 	
 	selectEvento.addEventListener("change", (e) => {
-		for (let i=0; i < data.length; i++) {
-			evento = data[i];
+		/*for (let i=0; i < eventos.length; i++) {
+			evento = eventos[i];
 			if (evento.titulo == e.target.selectedOptions[0].value) {
 			  selectedId = evento.id;
 			}
-		  }
+		  }*/
+		selectedId = e.target.selectedOptions[0].id;
   });
 }
 

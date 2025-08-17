@@ -42,8 +42,8 @@ window.addEventListener("load", async () => {
 		
 		await setConf(inputThreshold.value, 
 			inputLimitAgremiado.value,
-			inputLimitEvento,
-			inputLimitAsistencia
+			inputLimitEvento.value,
+			inputLimitAsistencia.value
 			);
 		
 		window.location.reload();
@@ -65,6 +65,10 @@ window.addEventListener("load", async () => {
 	
 	
 	document.getElementById("borrarTodo").addEventListener("click", async () => {
+		if (!confirm("¿Está seguro de eliminar todo el agremiado? Esto eliminará sus huellas asociadas")) {
+			return;
+		}
+
 		const response = await specialConfiguration("emptySubjectTable", "");
 		
 		console.log(response);
@@ -76,5 +80,7 @@ window.addEventListener("load", async () => {
 	console.log(data);
 	
 	inputThreshold.value = data.message.threshold;
-	inputLimit.value = data.message.limit;
+	inputLimitAgremiado.value = data.message.limitAgremiado;
+	inputLimitEvento.value = data.message.limitEvento;
+	inputLimitAsistencia.value = data.message.limitAsistencia;
 });

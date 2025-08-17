@@ -50,17 +50,22 @@ public class SvSubject extends HttpServlet {
 		try {
 			String nrelojStr = request.getParameter("nreloj");
 			String offsetStr = request.getParameter("offset");
+			String searchQuery = request.getParameter("searchQuery");
 			
 			//Handle abscence of limit and offset
 			int nreloj = (nrelojStr != null) ? Integer.parseInt(nrelojStr) : 0;
-			int offset = (offsetStr != null) ? Integer.parseInt(offsetStr) : 1;
+			int offset = (offsetStr != null) ? Integer.parseInt(offsetStr) : 0;
 			
 			String json;
 			
 			//If the client sends nreloj 0 means that wants to retrieave all subjects from database
 			if (nreloj == 0) {
-				var sujetos = dbSubject.getSubjectsWithoutImage(offset);
-				json = new Gson().toJson(sujetos);
+				var sujetos = dbSubject.getSubjectsWithoutImage(offset, searchQuery);
+        		int count = dbSubject.getCount();
+				String jsonSujetos = new Gson().toJson(sujetos);
+        		json = "{\"count\":" + count + "," +
+          			"\"subjects\":" + jsonSujetos +
+          			"}";
 				
 			} else {
 				var sujeto = dbSubject.getSubject(nreloj);
@@ -74,7 +79,7 @@ public class SvSubject extends HttpServlet {
 			out.print(json);
 			out.flush();
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			HTTPHandling.handleResponse(response, "error", "\"Error en el servidor: \"" + e.getMessage());
@@ -146,7 +151,7 @@ public class SvSubject extends HttpServlet {
 						+ "subjectUpdateWithoutImage, subjectAdd, subjectAddWithoutImage\"");
 			}
 				
-		} catch (NumberFormatException | SQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			

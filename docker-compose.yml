@@ -37,5 +37,7 @@ services:
     depends_on:
       tomcattest:
         condition: service_started
+    restart: on-failure
+
 volumes:
   db_data:

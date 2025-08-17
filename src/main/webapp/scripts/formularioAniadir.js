@@ -52,31 +52,27 @@ window.addEventListener("load", async () => {
 	inputs = subjectForm.querySelectorAll("input");
 	
 	document.getElementById("aniadir").addEventListener("click", async (e) => {
-			e.preventDefault();
+		e.preventDefault();
+
+		let response;
+		
+		let nreloj = inputs[0].value;
+		let nombre = inputs[1].value;
+		let apellidoPaterno = inputs[2].value;
+		let apellidoMaterno = inputs[3].value;
+		let activated = document.getElementById('activado').selectedOptions[0].value == "Si" ? 1 : 0;
+
+		//En caso de que la imagen no se decidiera aniadir
+		if (encodedImage == undefined) {
+			response = await addSubjectWithoutImage(nreloj, nombre, apellidoPaterno, apellidoMaterno, activated);				
 			
-			//En caso de que la imagen no se decidiera aniadir
-			if (encodedImage == undefined) {
-				let nreloj = inputs[0].value;
-				let nombre = inputs[1].value;
-				let apellidoPaterno = inputs[2].value;
-				let apellidoMaterno = inputs[3].value;
-				let activated = inputs[4].value;
-				
-				let response = await addSubjectWithoutImage(nreloj, nombre, apellidoPaterno, apellidoMaterno, activated == "true" ? 1 : 0);
-				console.log(response);
-				alert(response.message);
-				
-			//En caso de que se decidiera aniadir la imagen
-			} else {
-				let nreloj = inputs[0].value;
-				let nombre = inputs[1].value;
-				let apellidoPaterno = inputs[2].value;
-				let apellidoMaterno = inputs[3].value;
-				let activated = inputs[4].value;
-				
-				let response = await addSubject(nreloj, nombre, apellidoPaterno, apellidoMaterno, encodedImage, activated == "true" ? 1 : 0);
-				console.log(response);
-				alert(response.message);
-			}
-		})
+		//En caso de que se decidiera aniadir la imagen
+		} else {
+			response = await addSubject(nreloj, nombre, apellidoPaterno, apellidoMaterno, encodedImage, activated);
+		}
+
+		console.log(response);
+		alert(response.message);
+		location.reload();
+	});
 })

@@ -78,6 +78,17 @@ public class SvAsistencia extends HttpServlet {
 
 				try {
 					var sujeto = dbAsistencia.tomarAsistencia(image, json.getIdEvento());
+
+					if (!sujeto.activated) {
+						HTTPHandling.handleResponse(response, "error", "\"El usuario: " + 
+						sujeto.nombre + 
+						" con número de reloj: " +
+						sujeto.nreloj +
+						"está desactivado. No puede tomar asistencia\"");
+
+						break;
+					}
+
 					var jsonStr = new Gson().toJson(sujeto);
 					
 					HTTPHandling.handleResponse(response, "ok", jsonStr);

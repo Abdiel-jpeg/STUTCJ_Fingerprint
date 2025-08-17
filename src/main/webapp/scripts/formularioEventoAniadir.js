@@ -33,6 +33,6 @@ window.addEventListener("load", async () => {
 		let response = await addEvento(titulo, descripcion);
 		console.log(response);
 		alert(response.message);
-			
+		location.href = 'tablaEventos.html';	
 		})
 })

@@ -63,7 +63,7 @@ public class SvTest extends HttpServlet {
 				dbSubject.addSubjectsToDBTest(json.getData());
 				
 				HTTPHandling.handleResponse(response, "ok", "\"Datos probablemente añadidos a la BBDD\"");
-			} catch (IOException | SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				

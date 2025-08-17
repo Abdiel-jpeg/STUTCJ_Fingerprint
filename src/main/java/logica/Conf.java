@@ -2,29 +2,33 @@ package logica;
 
 public class Conf {
 	private double threshold;
-	private int limit;
-	
-	public Conf(double threshold, int limit) {
-		super();
+	private int limitAgremiado;
+	private int limitEvento;
+	private int limitAsistencia;
+
+	public Conf(double threshold, int limitAgremiado, int limitEvento, int limitAsistencia) {
 		this.threshold = threshold;
-		this.limit = limit;
+		this.limitAgremiado = limitAgremiado;
+		this.limitEvento = limitEvento;
+		this.limitAsistencia = limitAsistencia;
 	}
 	
 	public double getThreshold() {
 		return threshold;
 	}
-	public void setThreshold(double threshold) {
-		this.threshold = threshold;
+	public int getLimitAgremiado() {
+		return limitAgremiado;
 	}
-	public int getLimit() {
-		return limit;
+	public int getLimitEvento() {
+		return limitEvento;
 	}
-	public void setLimit(int limit) {
-		this.limit = limit;
+	public int getLimitAsistencia() {
+		return limitAsistencia;
 	}
 
 	@Override
 	public String toString() {
-		return "Conf [threshold=" + threshold + ", limit=" + limit + "]";
+		return "Conf [threshold=" + threshold + ", limitAgremiado=" + limitAgremiado + ", limitEvento=" + limitEvento
+				+ ", limitAsistencia=" + limitAsistencia + "]";
 	}
 }

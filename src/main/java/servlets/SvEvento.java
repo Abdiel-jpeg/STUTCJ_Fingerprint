@@ -1,6 +1,5 @@
 package servlets;
 
-import jakarta.servlet.http.HttpServlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -10,6 +9,7 @@ import com.google.gson.Gson;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jsonTemplates.EventoJsonTemplate;
@@ -51,12 +51,16 @@ public class SvEvento extends HttpServlet implements Servlet {
 			
 			//If the client sends nreloj 0 means that wants to retrieave all subjects from database
 			if (id == 0) {
-				var sujetos = DatabaseEvento.getEventos(offset);
-				json = new Gson().toJson(sujetos);
+				var eventos = DatabaseEvento.getEventos(offset);
+				int count = DatabaseEvento.getCount();
+				String jsonEventos = new Gson().toJson(eventos);
+				json = "{\"count\":" + count + "," +
+          			"\"eventos\":" + jsonEventos +
+          			"}";
 				
 			} else {
-				var sujeto = DatabaseEvento.getEvento(id);
-				json = new Gson().toJson(sujeto);
+				var evento = DatabaseEvento.getEvento(id);
+				json = new Gson().toJson(evento);
 			}
 			
 			response.setContentType("application/json");

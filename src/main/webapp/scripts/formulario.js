@@ -64,6 +64,7 @@ const insertData = async (subjectForm) => {
 	const nreloj = params.get("nreloj");
 	const data = await getSubject(nreloj);
 	inputs = subjectForm.querySelectorAll("input");
+	let activatedOption = document.getElementById('activado').selectedOptions[0]
 	let imageContainer = subjectForm.querySelector(".image-container");
 	const base64String = "data:image/png;base64," + data.fingerprintImage;
 	
@@ -72,40 +73,41 @@ const insertData = async (subjectForm) => {
 	inputs[1].value = data.nombre;
 	inputs[2].value = data.apellidoPaterno;
 	inputs[3].value = data.apellidoMaterno;
-	inputs[4].value = data.activated;
+	activatedOption = data.activated;
 	
 	imageContainer.innerHTML = "<img src=" + base64String + " />";
 }
 
-window.addEventListener("load", async () => {
+const buttonUpdate = async () => {
 	let subjectForm = document.getElementsByClassName("subject-form")[0];
 	
 	document.getElementById("actualizar").addEventListener("click", (e) => {
-			e.preventDefault();
+		e.preventDefault();
+		
+		console.log(updateSelector);
+
+		let nreloj = inputs[0].value;
+		let nombre = inputs[1].value;
+		let apellidoPaterno = inputs[2].value;
+		let apellidoMaterno = inputs[3].value;
+		let activated = document.getElementById('activado').selectedOptions[0].value == "Si" ? 1 : 0;
+		
+		//En caso de que la imagen no se decidiera actualizar
+		if (encodedImage == undefined) {
+			updateSubjectWithoutImage(nreloj, nombre, apellidoPaterno, apellidoMaterno, activated, updateSelector);
 			
-			console.log(updateSelector);
-			
-			//En caso de que la imagen no se decidiera actualizar
-			if (encodedImage == undefined) {
-				let nreloj = inputs[0].value;
-				let nombre = inputs[1].value;
-				let apellidoPaterno = inputs[2].value;
-				let apellidoMaterno = inputs[3].value;
-				let activated = inputs[4].value;
-				
-				updateSubjectWithoutImage(nreloj, nombre, apellidoPaterno, apellidoMaterno, activated == "true" ? 1 : 0, updateSelector);
-				
-			//En caso de que se decidiera actualizar la imagen
-			} else {
-				let nreloj = inputs[0].value;
-				let nombre = inputs[1].value;
-				let apellidoPaterno = inputs[2].value;
-				let apellidoMaterno = inputs[3].value;
-				let activated = inputs[4].value;
-				
-				updateSubject(nreloj, nombre, apellidoPaterno, apellidoMaterno, encodedImage, activated == "true" ? 1 : 0, updateSelector);
-			}
+		//En caso de que se decidiera actualizar la imagen
+		} else {
+			updateSubject(nreloj, nombre, apellidoPaterno, apellidoMaterno, encodedImage, activated, updateSelector);
+		}
+
+		alert("Imagen actualizada correctamente")
+		location.href = "tabla.html";
 		})
 
-	insertData(subjectForm)
+	insertData(subjectForm);
+}
+
+window.addEventListener("load", () => {
+	buttonUpdate();
 })

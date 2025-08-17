@@ -38,7 +38,11 @@ public class SvConf extends HttpServlet {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		
-		var jsonStr = new Gson().toJson(new Conf(DatabaseAsistencia.threshold, DatabaseSubject.limit));
+		var jsonStr = new Gson().toJson(new Conf(
+			DatabaseAsistencia.threshold, 
+			DatabaseSubject.limit, 
+			DatabaseEvento.limit, 
+			DatabaseAsistencia.limit));
 		
 		HTTPHandling.handleResponse(response, "ok", jsonStr);
 	}

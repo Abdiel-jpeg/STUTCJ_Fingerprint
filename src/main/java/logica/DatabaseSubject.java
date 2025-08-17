@@ -1,15 +1,16 @@
 package logica;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DatabaseSubject {
+	//private static final byte[] secretKey = Base64.getDecoder().decode(System.getenv("PRIVATE_KEY"));
 	public static int limit = 50;
 	private Connection conn;
 
@@ -33,7 +34,7 @@ public class DatabaseSubject {
 	}
 	
 	//In case of getting just one subject
-	public SubjectDTOImage getSubject(int nreloj) throws SQLException {
+	public SubjectDTOImage getSubject(int nreloj) throws Exception {
 		final String sql = "SELECT nombre, apellidoPaterno, apellidoMaterno, image, activated FROM subject WHERE nreloj=?";
 		
 		var pstmt = conn.prepareStatement(sql);
@@ -54,15 +55,36 @@ public class DatabaseSubject {
 	}
 	
 	//In case of getting multiple subjects 
-	public List<SubjectDTO> getSubjectsWithoutImage(int offset) throws SQLException {
+	public List<SubjectDTO> getSubjectsWithoutImage(int offset, String searchParam) throws SQLException {
 		List<SubjectDTO> agremiado = new ArrayList<SubjectDTO>();
 		
-		final String sql = "SELECT * FROM subject LIMIT ? OFFSET ?";
+		PreparedStatement pstmt;
 		
-		var pstmt = conn.prepareStatement(sql);
-		pstmt.setInt(1, limit);
-		pstmt.setInt(2, offset);
-		
+		if (searchParam == null) {
+			final String sql = "SELECT * FROM subject LIMIT ? OFFSET ?";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, limit);
+			pstmt.setInt(2, offset);
+
+		} else {
+			final String sqlSearch = "SELECT * FROM subject WHERE nreloj LIKE ?" +
+				" OR nombre LIKE ?" +
+				" OR apellidoPaterno LIKE ?" +
+				" OR apellidoMaterno LIke ?" +
+				" LIMIT ? OFFSET ?" ;
+
+			searchParam = "%" + searchParam + "%";
+
+			pstmt = conn.prepareStatement(sqlSearch);
+			pstmt.setString(1, searchParam);
+			pstmt.setString(2, searchParam);
+			pstmt.setString(3, searchParam);
+			pstmt.setString(4, searchParam);
+			pstmt.setInt(5, limit);
+			pstmt.setInt(6, offset);
+		}
+
 		var rs = pstmt.executeQuery();
 		
 		while (rs.next()) {
@@ -78,7 +100,17 @@ public class DatabaseSubject {
 		return agremiado;
 	}
 	
-	public void addSubjectsToDBTest(String absolutePath) throws IOException, SQLException {
+	public int getCount() throws SQLException {
+		final String sql = "SELECT COUNT(*) AS count FROM subject";
+
+		var stmt = conn.createStatement();
+		var rs = stmt.executeQuery(sql);
+		rs.next();
+
+		return rs.getInt("count");
+	}
+
+	public void addSubjectsToDBTest(String absolutePath) throws Exception {
 		List<Subject> agremiado = new ArrayList<Subject>();
 		
 		final String sql = "INSERT INTO subject (nombre, apellidoPaterno, apellidoMaterno, image, template, activated)"
@@ -108,7 +140,7 @@ public class DatabaseSubject {
 		}
 	}
 	
-	public void addSubjectToDB(Subject sujeto) throws SQLException {
+	public void addSubjectToDB(Subject sujeto) throws Exception {
 		final String sql = "INSERT INTO subject VALUES (?, ?, ?, ?, ?, ?, ?)";
 		
 		var pstmt = conn.prepareStatement(sql);
@@ -140,7 +172,7 @@ public class DatabaseSubject {
 		}
 	}
 	
-	public void updateSubject(Subject sujeto, int nreloj) throws SQLException {
+	public void updateSubject(Subject sujeto, int nreloj) throws Exception {
 		final String sql = "UPDATE subject SET nreloj=?,"
 				+ "	nombre=?,"
 				+ "	apellidoPaterno=?,"

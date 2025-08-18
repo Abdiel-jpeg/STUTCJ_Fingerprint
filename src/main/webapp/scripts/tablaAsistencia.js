@@ -1,4 +1,8 @@
+let limit = 0;
+let count = 0;
 let offset = 0;
+let idEvento = 0;
+let pagesDiv;
 
 const fetchEvento = async () => {
   const response = await fetch('SvEvento?offset=0');
@@ -6,7 +10,7 @@ const fetchEvento = async () => {
   return json;
 }
 
-const fetchGetAsistencia = async (idEvento, offset) => {
+const fetchGetAsistencia = async () => {
   const response = await fetch('SvAsistencia?idEvento='+idEvento+'&offset='+offset, getParams);
   const json = await response.json();
   return json;
@@ -25,10 +29,64 @@ const fetchDelAsistencia = async (idEvento, nreloj) => {
   return json;
 }
 
+const insertPageButtons = () => {	
+  pagesDiv.innerHTML = "";
+
+	let containerPages = document.createElement('page');
+	let labelPages = document.createElement('label');
+	let previousPage = document.createElement('button');
+	let nextPage = document.createElement('button');
+
+	containerPages.setAttribute('class', 'containerPages');
+	labelPages.setAttribute('id', 'labelPages');
+	previousPage.setAttribute('class', 'previousPage');
+	nextPage.setAttribute('class', 'nextPage');
+
+	labelPages.appendChild(document.createTextNode(`Mostrando ${offset + limit > count ? count : offset + limit} de ${count}`))
+
+  //Si estamos en la primera pagina no mostrar atras
+	if (offset == 0) {
+		previousPage.style.display = 'none';
+	}
+
+  //Si los rows son menos que el limite no mostrar ni mrd
+  //Y en caso de que estemos en la última página tampoco mostrarlo
+	if (count <= limit || offset + limit > count) {
+		nextPage.style.display = 'none';
+	}
+
+	previousPage.appendChild(document.createTextNode('<'));
+	nextPage.appendChild(document.createTextNode('>'))
+
+	previousPage.addEventListener("click", (e) => {
+		e.preventDefault();
+
+		offset = offset - limit;
+
+    insertSubjects();
+    insertPageButtons();
+	})
+
+	nextPage.addEventListener("click", (e) => {
+		e.preventDefault();
+
+		offset = offset + limit;
+
+    //Update table
+    insertSubjects();
+    insertPageButtons();
+	})
+
+	containerPages.appendChild(labelPages);
+	containerPages.appendChild(previousPage);
+	containerPages.appendChild(nextPage);
+
+	pagesDiv.appendChild(containerPages);
+}
+
 const addEventosToSelect = async () => {
     let { eventos } = await fetchEvento()
     let selectEvento = document.getElementById('selectEvento');
-    let selectedId;
 
     //Add initial value
     let defaultValue = document.createElement("option");
@@ -50,27 +108,25 @@ const addEventosToSelect = async () => {
 	}
 
   selectEvento.addEventListener("change", (e) => {
-    //console.log(e.target.selectedOptions[0].value);
+    idEvento = e.target.selectedOptions[0].id;
 
-    /*for (let i=0; i < data.length; i++) {
-      evento = data[i];
-      if (evento.titulo == e.target.selectedOptions[0].value) {
-        selectedId = evento.id;
-      }
-    }*/
-
-    selectedId = e.target.selectedOptions[0].id;
-    insertSubjects(selectedId, offset);
+    //Update table
+    insertSubjects();
+    insertPageButtons();
   });
 }
 
-const insertSubjects = async (idEvento, offset) => {
-  const dataSubject = await fetchGetAsistencia(idEvento, offset);
+const insertSubjects = async () => {
+  let { count, subjects } = await fetchGetAsistencia();
+
+  count = count;
+  limit = subjects.length;
 
   const tbody = document.querySelector("#asistenciaTable tbody");
   tbody.innerHTML = "";
-  for (let i = 0; i < dataSubject.length; i++) {
-    s = dataSubject[i];
+
+  for (let i = 0; i < subjects.length; i++) {
+    s = subjects[i];
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${s.nreloj}</td>
@@ -86,7 +142,10 @@ const insertSubjects = async (idEvento, offset) => {
       let response = await fetchDelAsistencia(idEvento, s.nreloj);
       console.log(response);
       alert(response.message);
-      reload();
+
+      //Update table
+      insertSubjects();
+      insertPageButtons();
     })
 
   tbody.appendChild(row);
@@ -94,6 +153,7 @@ const insertSubjects = async (idEvento, offset) => {
 }
 
 window.addEventListener("load", async () => {
-  
+  pagesDiv = document.getElementById('pages');
+
   addEventosToSelect();   
 })

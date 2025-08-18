@@ -41,25 +41,28 @@ public class SvAsistencia extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
-    String idEventoStr = request.getParameter("idEvento");
-    String offsetStr = request.getParameter("offset");
+		String idEventoStr = request.getParameter("idEvento");
+		String offsetStr = request.getParameter("offset");
 
-    int idEvento = (idEventoStr != null) ? Integer.parseInt(idEventoStr) : null;
-    int offset = (offsetStr != null) ? Integer.parseInt(offsetStr) : null;
-    
-    try{
-      var sujetos = dbAsistencia.getSubjects(idEvento, offset);
-      String json = new Gson().toJson(sujetos);
+		int idEvento = (idEventoStr != null) ? Integer.parseInt(idEventoStr) : null;
+		int offset = (offsetStr != null) ? Integer.parseInt(offsetStr) : null;
+		
+		try{
+			var sujetos = dbAsistencia.getSubjects(idEvento, offset);
+			String jsonEventos = new Gson().toJson(sujetos);
+			String json = "{\"count\":" + dbAsistencia.getCount(idEvento) + "," +
+          			"\"subjects\":" + jsonEventos +
+          			"}";
 
-      response.setContentType("application/json");
-      response.setCharacterEncoding("UTF-8");
-      PrintWriter out = response.getWriter();
-      out.print(json);
-      out.flush();
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			PrintWriter out = response.getWriter();
+			out.print(json);
+			out.flush();
 
-    } catch(SQLException e) {
-      HTTPHandling.handleResponse(response, "error", "\"Error recibiendo datos: " + e.getMessage() + "\"");
-    }
+		} catch(SQLException e) {
+			HTTPHandling.handleResponse(response, "error", "\"Error recibiendo datos: " + e.getMessage() + "\"");
+		}
 
 	}
 
@@ -78,6 +81,12 @@ public class SvAsistencia extends HttpServlet {
 
 				try {
 					var sujeto = dbAsistencia.tomarAsistencia(image, json.getIdEvento());
+
+					if (sujeto == null) {
+						HTTPHandling.handleResponse(response, "error", "\"No se reconoció la huella. Intente de nuevo.\"");
+
+						break;
+					}
 
 					if (!sujeto.activated) {
 						HTTPHandling.handleResponse(response, "error", "\"El usuario: " + 

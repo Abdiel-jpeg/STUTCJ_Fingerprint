@@ -11,14 +11,11 @@ import com.machinezoo.sourceafis.FingerprintTemplate;
 
 public class DatabaseAsistencia {
 	private Connection conn;
-	private Crypto crypto;
 	public static double threshold = 15;
 	public static int limit = 50;
 
 	public DatabaseAsistencia() throws SQLException, ClassNotFoundException {
 		super();
-		
-		crypto = new Crypto();
 
 		conn = DBConn.getConn();
 		
@@ -30,40 +27,51 @@ public class DatabaseAsistencia {
 				+ ");";
 		
 		var stmt = conn.createStatement();
-    stmt.execute(startSQL);
+    	stmt.execute(startSQL);
 	}
 	
-  public List<SubjectDTO> getSubjects(int idEvento, int offset) throws SQLException {
-    List<SubjectDTO> subjects = new ArrayList<SubjectDTO>();
+	public List<SubjectDTO> getSubjects(int idEvento, int offset) throws SQLException {
+		List<SubjectDTO> subjects = new ArrayList<SubjectDTO>();
 
-    final String sql = "SELECT" + 
-		" s.nreloj," +
-		" s.nombre," +
-		" s.apellidoPaterno," +
-		" s.apellidoMaterno" + 
-		" FROM asistencia a" +
-		" LEFT JOIN subject s" +
-		" ON a.nreloj = s.nreloj" +
-		" WHERE a.idEvento = ? " + 
-		" LIMIT ? OFFSET ?";
+		final String sql = "SELECT" + 
+			" s.nreloj," +
+			" s.nombre," +
+			" s.apellidoPaterno," +
+			" s.apellidoMaterno" + 
+			" FROM asistencia a" +
+			" LEFT JOIN subject s" +
+			" ON a.nreloj = s.nreloj" +
+			" WHERE a.idEvento = ? " + 
+			" LIMIT ? OFFSET ?";
 
-    var pstmt = conn.prepareStatement(sql);
-    pstmt.setInt(1, idEvento);
-    pstmt.setInt(2, limit);
-    pstmt.setInt(3, offset);
-    var rs = pstmt.executeQuery();
+		var pstmt = conn.prepareStatement(sql);
+		pstmt.setInt(1, idEvento);
+		pstmt.setInt(2, limit);
+		pstmt.setInt(3, offset);
+		var rs = pstmt.executeQuery();
 
-    while (rs.next()) {
-      int nreloj = rs.getInt("nreloj");
-      String nombre = rs.getString("nombre");
-      String apellidoPaterno = rs.getString("apellidoPaterno");
-      String apellidoMaterno = rs.getString("apellidoMaterno");
+		while (rs.next()) {
+			int nreloj = rs.getInt("nreloj");
+			String nombre = rs.getString("nombre");
+			String apellidoPaterno = rs.getString("apellidoPaterno");
+			String apellidoMaterno = rs.getString("apellidoMaterno");
 
-      subjects.add(new SubjectDTO(nreloj, nombre, apellidoPaterno, apellidoMaterno, true));
-    }
+			subjects.add(new SubjectDTO(nreloj, nombre, apellidoPaterno, apellidoMaterno, true));
+		}
 
-    return subjects;
-  }
+		return subjects;
+	}
+
+	public int getCount(int idEvento) throws SQLException {
+		final String sql = "SELECT COUNT(*) AS count FROM asistencia WHERE idEvento=?";
+
+		var pstmt = conn.prepareStatement(sql);
+		pstmt.setInt(1, idEvento);
+		var rs = pstmt.executeQuery();
+		rs.next();
+
+		return rs.getInt("count");
+	}
 
 	public SubjectDTO tomarAsistencia(byte[] probeEncoded, int idEvento) throws SQLException {
 		var probeTemplate = new FingerprintTemplate(new FingerprintImage(probeEncoded));
@@ -99,9 +107,18 @@ public class DatabaseAsistencia {
 
 		var assistanceTaken = (max >= threshold) ? match : null;
 
+		//If the fingerprint was recognized, return null
 		if (assistanceTaken == null) {
 			return null;
 		}
+
+		//If the fingerprint find a match, but is deactivated the subjet, do not register assistance in the DB
+		//and return the subject to handle the response in the servlet
+		if (!assistanceTaken.activated) {
+			return assistanceTaken;
+		}
+		
+		//If everything was right, register assistance and return subject
 		registrarAsistencia(idEvento, assistanceTaken.nreloj);
 
 		return assistanceTaken;

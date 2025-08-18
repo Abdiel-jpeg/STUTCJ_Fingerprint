@@ -1,0 +1,55 @@
+body {
+  padding: 0px;
+}
+
+.principal {
+  position: relative;           /* container for absolute positioning */
+  display: flex;
+  justify-content: center;      /* horizontal centering of h1 */
+  align-items: center;          /* vertical centering of h1 */
+  text-align: center;           /* center multi-line text */
+  height: 800px;
+  margin-top: 100px;
+}
+
+.principal img {
+  width: 100%;                  /* fill container */
+  height: auto;                 /* keep aspect ratio */
+  display: block;
+  filter: blur(2px);
+  object-fit: cover;
+}
+
+.principal h1 {
+  position: absolute;            /* place over image */
+  color: white;                  /* or a contrasting color */
+  font-size: clamp(24px, 4vw, 60px); /* responsive font */
+  padding: 0 20px;               /* prevent touching edges */
+  z-index: 1;                    /* on top of image */
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.5); /* optional for readability */
+}
+
+div.agremiados{
+  margin-top: 128px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 40px;
+}
+
+p.agremiados {
+  font-size: xxx-large;
+}
+
+footer {
+  margin-top: 200px;
+  padding-top: 100px;
+  padding-bottom: 24px;
+  background-color: #f8921e;
+  display: flex;
+  color: white;
+  flex-direction: column;
+  align-items: center;
+}

@@ -1,5 +1,8 @@
 
-let count, offset, limit;
+let count = 0;
+let offset = 0;
+let limit = 0;
+let pages;
 
 const fetchEventos = async () => {
   const response = await fetch('SvEvento?offset=' + offset);
@@ -7,7 +10,9 @@ const fetchEventos = async () => {
   return json;
 }
 
-const insertPageButtons = (parent) => {	
+const insertPageButtons = () => {	
+  pages.innerHTML = "";
+
 	let containerPages = document.createElement('page');
 	let labelPages = document.createElement('label');
 	let previousPage = document.createElement('button');
@@ -39,35 +44,29 @@ const insertPageButtons = (parent) => {
 	previousPage.appendChild(document.createTextNode('<'));
 	nextPage.appendChild(document.createTextNode('>'))
 
-	previousPage.addEventListener("click", (e) => {
+	previousPage.addEventListener("click", async (e) => {
 		e.preventDefault();
 
-		goToPreviousPage();
+  	offset = offset - limit;
+
+    await loadEventos();
+    insertPageButtons();
 	})
 
-	nextPage.addEventListener("click", (e) => {
+	nextPage.addEventListener("click", async (e) => {
 		e.preventDefault();
 
-		goToNextPage();
+  	offset = offset + limit;
+
+    await loadEventos();
+    insertPageButtons();
 	})
 
 	containerPages.appendChild(labelPages);
 	containerPages.appendChild(previousPage);
 	containerPages.appendChild(nextPage);
 
-	parent.appendChild(containerPages);
-}
-
-const goToPreviousPage = () => {
-	offset = offset - limit;
-
-  location.href = 'tabla.html?offset=' + offset;
-}
-
-const goToNextPage = () => {
-	offset = offset + limit;
-
-	location.href = 'tabla.html?offset=' + offset;
+	pages.appendChild(containerPages);
 }
 
 const loadEventos = async () => {
@@ -93,15 +92,10 @@ const loadEventos = async () => {
 }
 
 window.addEventListener("load", async () => {
-  let pages = document.getElementById('pages');
-  let url = window.location;
-  let params = new URLSearchParams(url.search);
-  let offsetParam = parseInt(params.get('offset'));
-    
-  offset = offsetParam || offsetParam < 0 ? offsetParam : 0;
+  pages = document.getElementById('pages');
 
 	await loadEventos();
-  insertPageButtons(pages);
+  insertPageButtons();
 })
 
 window.addEventListener("pageshow", (e) => {

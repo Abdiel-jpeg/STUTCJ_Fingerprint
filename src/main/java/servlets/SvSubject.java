@@ -63,9 +63,10 @@ public class SvSubject extends HttpServlet {
 				var sujetos = dbSubject.getSubjectsWithoutImage(offset, searchQuery);
         		int count = dbSubject.getCount();
 				String jsonSujetos = new Gson().toJson(sujetos);
-        		json = "{\"count\":" + count + "," +
-          			"\"subjects\":" + jsonSujetos +
-          			"}";
+        		json = "{\"count\":" + count + ","
+              + "\"limit\":" + DatabaseSubject.limit + ","
+              + "\"subjects\":" + jsonSujetos 
+              + "}";
 				
 			} else {
 				var sujeto = dbSubject.getSubject(nreloj);

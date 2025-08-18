@@ -40,12 +40,6 @@ const addEventosToSelect = async () => {
 	}
 	
 	selectEvento.addEventListener("change", (e) => {
-		/*for (let i=0; i < eventos.length; i++) {
-			evento = eventos[i];
-			if (evento.titulo == e.target.selectedOptions[0].value) {
-			  selectedId = evento.id;
-			}
-		  }*/
 		selectedId = e.target.selectedOptions[0].id;
   });
 }
@@ -67,12 +61,13 @@ window.addEventListener("load", () => {
 			let response = await fetchFingerprintImage(encodedImage, selectedId);
 			console.log(response);
 
-			if (response.message == null) {
-				alert("No se reconocío su huella dactilar, por favor intente de nuevo");
+			if (response.status == "error") {
+				alert(response.message);
 
 			} else {
-				alert("Asistencia tomada para: " + response.message.nombre + " " + response.message.apellidoPaterno 
-				+ " " + response.message.apellidoMaterno + ". Nreloj:  " + response.message.nreloj);
+				//alert("Asistencia tomada para: " + response.message.nombre + " " + response.message.apellidoPaterno 
+				//+ " " + response.message.apellidoMaterno + ". Nreloj:  " + response.message.nreloj);
+        alert(response.message)
 			}
 		  }
 		  

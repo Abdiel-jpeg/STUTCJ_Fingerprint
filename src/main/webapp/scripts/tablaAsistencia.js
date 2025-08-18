@@ -32,6 +32,8 @@ const fetchDelAsistencia = async (idEvento, nreloj) => {
 const insertPageButtons = () => {	
   pagesDiv.innerHTML = "";
 
+  console.log("Count in pages: " + count);
+
 	let containerPages = document.createElement('page');
 	let labelPages = document.createElement('label');
 	let previousPage = document.createElement('button');
@@ -58,22 +60,22 @@ const insertPageButtons = () => {
 	previousPage.appendChild(document.createTextNode('<'));
 	nextPage.appendChild(document.createTextNode('>'))
 
-	previousPage.addEventListener("click", (e) => {
+	previousPage.addEventListener("click", async (e) => {
 		e.preventDefault();
 
 		offset = offset - limit;
 
-    insertSubjects();
+    await insertSubjects();
     insertPageButtons();
 	})
 
-	nextPage.addEventListener("click", (e) => {
+	nextPage.addEventListener("click", async (e) => {
 		e.preventDefault();
 
 		offset = offset + limit;
 
     //Update table
-    insertSubjects();
+    await insertSubjects();
     insertPageButtons();
 	})
 
@@ -107,26 +109,37 @@ const addEventosToSelect = async () => {
 		selectEvento.appendChild(optionEvento);
 	}
 
-  selectEvento.addEventListener("change", (e) => {
+  selectEvento.addEventListener("change", async (e) => {
     idEvento = e.target.selectedOptions[0].id;
 
     //Update table
-    insertSubjects();
+    await insertSubjects();
     insertPageButtons();
   });
 }
 
 const insertSubjects = async () => {
-  let { count, subjects } = await fetchGetAsistencia();
+  let data = await fetchGetAsistencia();
 
-  count = count;
-  limit = subjects.length;
+  count = data.count;
+  limit = data.limit;
+
+  const requerimientoP = document.getElementById("requerimientoAsistencia");
+   
+  const requer = Math.round(( data.totalSubjectCount / 2 ) + 1);
+
+  if (data.subjects.length < requer) {
+    requerimientoP.innerHTML = "Faltan " + ( requer - count ) + " para cumplir \"requerimiento\"";
+
+  } else {
+    requerimientoP.innerHTML = "Se ha cumplido \"requerimiento\". " + count + " asistencias de " + requer;
+  }
 
   const tbody = document.querySelector("#asistenciaTable tbody");
   tbody.innerHTML = "";
 
-  for (let i = 0; i < subjects.length; i++) {
-    s = subjects[i];
+  for (let i = 0; i < data.subjects.length; i++) {
+    s = data.subjects[i];
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${s.nreloj}</td>
@@ -136,7 +149,9 @@ const insertSubjects = async () => {
       `;
     let botonEliminar = document.createElement('button');
     botonEliminar.innerHTML = "Retirar asistencia";
-    row.appendChild(document.createElement('td').appendChild(botonEliminar))
+    let td = document.createElement("td");
+    td.appendChild(botonEliminar);
+    row.appendChild(td);
 
     botonEliminar.addEventListener("click", async () => {
       let response = await fetchDelAsistencia(idEvento, s.nreloj);
@@ -144,7 +159,7 @@ const insertSubjects = async () => {
       alert(response.message);
 
       //Update table
-      insertSubjects();
+      await insertSubjects();
       insertPageButtons();
     })
 

@@ -62,7 +62,7 @@ public class DatabaseEvento {
 	}
 
 	public static int getCount() throws SQLException {
-		final String sql = "SELECT COUNT(*) AS count FROM subject";
+		final String sql = "SELECT COUNT(*) AS count FROM evento";
 	
 		var stmt = conn.createStatement();
 		var rs = stmt.executeQuery(sql);

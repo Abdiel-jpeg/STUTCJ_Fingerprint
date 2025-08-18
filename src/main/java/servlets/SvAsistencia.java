@@ -12,6 +12,7 @@ import logica.HTTPHandling;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Base64;
 
 import com.google.gson.Gson;
@@ -50,9 +51,11 @@ public class SvAsistencia extends HttpServlet {
 		try{
 			var sujetos = dbAsistencia.getSubjects(idEvento, offset);
 			String jsonEventos = new Gson().toJson(sujetos);
-			String json = "{\"count\":" + dbAsistencia.getCount(idEvento) + "," +
-          			"\"subjects\":" + jsonEventos +
-          			"}";
+			String json = "{\"count\":" + dbAsistencia.getCount(idEvento) + ","
+        + "\"totalSubjectCount\":" + dbAsistencia.getTotalSubjectCount() + ","
+        + "\"limit\":" + DatabaseAsistencia.limit + ","
+        + "\"subjects\":" + jsonEventos 
+        + "}";
 
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
@@ -98,9 +101,17 @@ public class SvAsistencia extends HttpServlet {
 						break;
 					}
 
-					var jsonStr = new Gson().toJson(sujeto);
+					//var jsonStr = new Gson().toJson(sujeto);
 					
-					HTTPHandling.handleResponse(response, "ok", jsonStr);
+					HTTPHandling.handleResponse(response, "ok", "\"Asistencia tomada para: "
+              + sujeto.apellidoPaterno + " " + sujeto.nombre 
+              + ". Con N. Reloj: " + sujeto.nreloj + "\"");
+
+        } catch (SQLIntegrityConstraintViolationException e) {
+          System.out.println("SQLIntegrityConstraintViolationException was thrown");
+
+          HTTPHandling.handleResponse(response, "error", "\"Ya se tomo la asistencia para este sujeto\"");
+
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

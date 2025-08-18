@@ -75,9 +75,13 @@ public class SvTest extends HttpServlet {
 		case "emptySubjectTable":
 			try {
 				var conn = DBConn.getConn();
-				final String sql = "DELETE FROM subject WHERE 1=1";
+
+        final String sqlAsistencia = "DELETE FROM asistencia WHERE 1=1";
+				final String sqlSubject = "DELETE FROM subject WHERE 1=1";
+
 				var stmt = conn.createStatement();
-				stmt.execute(sql);
+				stmt.execute(sqlAsistencia);
+        stmt.execute(sqlSubject);
 				
 				HTTPHandling.handleResponse(response, "ok", "\"La BBDD fue limpiada exitosamente\"");
 			} catch (SQLException | ClassNotFoundException e) {
@@ -112,10 +116,10 @@ public class SvTest extends HttpServlet {
 					pstmtCSV.setString(2, nombre);
 					pstmtCSV.setString(3, apellidoPaterno);
 					pstmtCSV.setString(4, apellidoMaterno);
-					pstmtCSV.executeUpdate();
-					
-					HTTPHandling.handleResponse(response, "ok", "\"Datos añadidos correctamente al a BBDD\"");
+					pstmtCSV.executeUpdate();		
 				}
+        
+        HTTPHandling.handleResponse(response, "ok", "\"Datos añadidos correctamente al a BBDD\"");
 			} catch (SQLException | ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -2,16 +2,36 @@
 <html lang="es">
 <head>
 	<meta charset="UTF-8" />
-	<title>Tabla de Eventos</title>
+  <title>Tabla de Eventos</title>
   <script src="scripts/fetchParams.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
+  <link href="css/general-styles.css" rel="stylesheet">
 	<script src="scripts/tablaEventos.js"></script>
 	<link rel="stylesheet" href="css/tabla.css">
 </head>
 <body>
+  <header>
+    <div class="logo">
+      <a class="logo-link" href="index.html"><h2 class="league-gothic">STUTCJ-FIngerprint</h2></a>
+      <div class="fingerprint">
+        <img src='images/fingerprint.png'>
+      </div>
+    </div>
+    <nav class="menu">
+      <a href='tabla.html'>Tabla Agremiado</a>
+      <a href='tablaEventos.html'>Tabla de Eventos</a>
+      <a href='tomaAsistencia.html'>Toma de Asistencia</a>
+      <a href='tablaAsistencia.html'>Tabla de Asistencia</a>
+      <a href='conf.html'>Configuración</a>
+      <a href='nosotros.html'>Nosotros</a>
+    <nav>
+  </header>
 
-<h2>Lista de Eventos</h2>
-<button id='aniadirButton' onClick="location.href='formularioEventoAniadir.html'">Añadir nuevo evento</button>
-<p><label>Buscar:</label><input id='buscarInput' type="text" ></p>
+<h1>Lista de Eventos</h1>
+<p><button id='aniadirButton' onClick="location.href='formularioEventoAniadir.html'">Añadir nuevo evento</button></p>
+<!--<p><label>Buscar:</label><input id='buscarInput' type="text" ></p> -->
 <table id="eventoTable">
   <thead>
     <tr>

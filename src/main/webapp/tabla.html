@@ -3,13 +3,33 @@
 <head>
 	<meta charset="UTF-8" />
 	<title>Tabla de Subjects</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/tabla.css">
+  <link rel="stylesheet" href="css/general-styles.css">
   <script src="scripts/fetchParams.js"></script>
 	<script src="scripts/tabla.js"></script>
-	<link rel="stylesheet" href="css/tabla.css">
 </head>
 <body>
+<header>
+  <div class="logo">
+    <a class="logo-link" href="index.html"><h2 class="league-gothic">STUTCJ-FIngerprint</h2></a>
+    <div class="fingerprint">
+      <img src='images/fingerprint.png'>
+    </div>
+  </div>
+  <nav class="menu">
+    <a href='tabla.html'>Tabla Agremiado</a>
+    <a href='tablaEventos.html'>Tabla de Eventos</a>
+    <a href='tomaAsistencia.html'>Toma de Asistencia</a>
+    <a href='tablaAsistencia.html'>Tabla de Asistencia</a>
+    <a href='conf.html'>Configuración</a>
+    <a href='nosotros.html'>Nosotros</a>
+  <nav>
+</header>
 
-<h2>Lista de Agremiado</h2>
+<h1>Lista de Agremiado</h1>
 <button id='aniadirButton' onClick="location.href='formularioAniadir.html'">Añadir nuevo sujeto</button>
 <p><label>Buscar:</label><input id='buscarInput' type="text" ><button id="buscarButton">Buscar</button></p>
 <div id="pages">

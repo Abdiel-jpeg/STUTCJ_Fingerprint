@@ -3,16 +3,38 @@
 <html>
 	<head>
 		<title>Toma de Asistencia</title>
+		<meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
+    <link href="css/general-styles.css" rel="stylesheet">
 		<script src="sdk/es6-shim.js"></script>
-    	<script src="sdk/websdk.client.bundle.min.js"></script>
-    	<script src="sdk/fingerprint.sdk.min.js"></script>
-    	<script src="scripts/fetchParams.js"></script>
-    	<script src="scripts/tomaAsistencia.js"></script>
+   	<script src="sdk/websdk.client.bundle.min.js"></script>
+   	<script src="sdk/fingerprint.sdk.min.js"></script>
+   	<script src="scripts/fetchParams.js"></script>
+   	<script src="scripts/tomaAsistencia.js"></script>
 		<script src="scripts/app.js"></script>
 	</head>
 	
 	<body>
-		<h2>Toma de asistencia</h2>
+    <header>
+    <div class="logo">
+      <a class="logo-link" href="index.html"><h2 class="league-gothic">STUTCJ-FIngerprint</h2></a>
+      <div class="fingerprint">
+        <img src='images/fingerprint.png'>
+      </div>
+    </div>
+    <nav class="menu">
+      <a href='tabla.html'>Tabla Agremiado</a>
+      <a href='tablaEventos.html'>Tabla de Eventos</a>
+      <a href='tomaAsistencia.html'>Toma de Asistencia</a>
+      <a href='tablaAsistencia.html'>Tabla de Asistencia</a>
+      <a href='conf.html'>Configuración</a>
+      <a href='nosotros.html'>Nosotros</a>
+    <nav>
+  </header>
+
+		<h1>Toma de asistencia</h1>
 		<p>Seleccione el evento a asistir</p>
 		<select name="evento" id="selectEvento">
 		</select>

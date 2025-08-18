@@ -1,7 +1,9 @@
 
-let limit;
-let offset;
-let count;
+let limit = 0;
+let offset = 0;
+let count = 0;
+let pages;
+let currentSearchQuery = null;
 
 const fetchSubjects = async () => {
   const response = await fetch("SvSubject?offset=" + offset, getParams);
@@ -15,7 +17,9 @@ const fetchSubjectsSearchQuery = async (searchQuery) => {
   return json;
 }
 
-const insertPageButtons = (parent) => {	
+const insertPageButtons = () => {	
+  pages.innerHTML = "";
+
 	let containerPages = document.createElement('page');
 	let labelPages = document.createElement('label');
 	let previousPage = document.createElement('button');
@@ -47,40 +51,45 @@ const insertPageButtons = (parent) => {
 	previousPage.appendChild(document.createTextNode('<'));
 	nextPage.appendChild(document.createTextNode('>'))
 
-	previousPage.addEventListener("click", (e) => {
+	previousPage.addEventListener("click", async (e) => {
 		e.preventDefault();
 
-		goToPreviousPage();
+	  offset = offset - limit;
+
+    await loadSubjects();
+    insertPageButtons();
 	})
 
-	nextPage.addEventListener("click", (e) => {
+	nextPage.addEventListener("click", async (e) => {
 		e.preventDefault();
 
-		goToNextPage();
+	  offset = offset + limit;
+
+    await loadSubjects();
+    insertPageButtons();
 	})
 
 	containerPages.appendChild(labelPages);
 	containerPages.appendChild(previousPage);
 	containerPages.appendChild(nextPage);
 
-	parent.appendChild(containerPages);
+	pages.appendChild(containerPages);
 }
 
-const goToPreviousPage = () => {
-	offset = offset - limit;
+const loadSubjects = async () => {
+  let data;
 
-  location.href = 'tabla.html?offset=' + offset;
-}
+  //If there where a search query
+  if (currentSearchQuery !== null) {
+    data = currentSearchQuery;
+  
+    //If this method was called without search query
+  } else {
+    data = await fetchSubjects();
+  }
 
-const goToNextPage = () => {
-	offset = offset + limit;
-
-	location.href = 'tabla.html?offset=' + offset;
-}
-
-const loadSubjects = (data) => {
   count = data.count;
-  limit = data.subjects.length;
+  limit = data.limit;
 
   const tbody = document.querySelector("#subjectsTable tbody");
   tbody.innerHTML = "";
@@ -108,19 +117,25 @@ window.addEventListener("load", async () => {
   let offsetParam = parseInt(params.get('offset'));
   offset = offsetParam || offsetParam < 0 ? offsetParam : 0;
 
-  let data = await fetchSubjects();
-
-  let pages = document.getElementById('pages');
+  pages = document.getElementById('pages');
 
   document.getElementById("buscarButton").addEventListener("click", async () => {
     const searchQuery = document.getElementById("buscarInput").value;
 
     let data = await fetchSubjectsSearchQuery(searchQuery);
-    loadSubjects(data);
+
+    console.log(data)
+
+    currentSearchQuery = data;
+    limit = data.limit
+    count = data.count
+
+    await loadSubjects();
+    insertPageButtons();
   })
 
-	loadSubjects(data);
-  insertPageButtons(pages);
+	await loadSubjects();
+  insertPageButtons();
 })
 
 window.addEventListener("pageshow", (e) => {

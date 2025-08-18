@@ -23,7 +23,8 @@ public class DatabaseAsistencia {
 				+ "	idEvento INTEGER,"
 				+ "	nreloj INTEGER,"
 				+ "	FOREIGN KEY (idEvento) REFERENCES evento(id),"
-				+ "	FOREIGN KEY (nreloj) REFERENCES subject(nreloj)"
+				+ "	FOREIGN KEY (nreloj) REFERENCES subject(nreloj),"
+        + " CONSTRAINT UQ_idEvento_nreloj UNIQUE NONCLUSTERED(idEVento, nreloj)"
 				+ ");";
 		
 		var stmt = conn.createStatement();
@@ -72,6 +73,16 @@ public class DatabaseAsistencia {
 
 		return rs.getInt("count");
 	}
+
+  public int getTotalSubjectCount() throws SQLException {
+    final String sql = "SELECT COUNT(*) AS count FROM subject";
+
+    var stmt = conn.createStatement();
+    var rs = stmt.executeQuery(sql);
+    rs.next();
+
+    return rs.getInt("count");
+  }
 
 	public SubjectDTO tomarAsistencia(byte[] probeEncoded, int idEvento) throws SQLException {
 		var probeTemplate = new FingerprintTemplate(new FingerprintImage(probeEncoded));

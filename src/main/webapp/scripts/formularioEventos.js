@@ -24,7 +24,10 @@ const fetchUpdateEvento = async (id, titulo, descripcion) => {
 
 const fetchDeleteEvento = async (id) => {
 	const query = {
-		"id": id
+    "opcion": "eventoDelete",
+		"id": id,
+    "titulo": "",
+    "descripcion": ""
 	};
 	
 	const response = await fetch('SvEvento', getQueryParams('POST', query));
@@ -71,7 +74,7 @@ window.addEventListener("load", async () => {
 
 		const response = await fetchDeleteEvento(updateSelector);
 		alert(response.message);
-		location.href = tablaEventos.html;
+		location.href = "tablaEventos.html";
 	})
 
 	insertData(eventoForm)

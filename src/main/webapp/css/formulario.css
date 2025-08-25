@@ -1,0 +1,49 @@
+
+body {
+  margin-top: 100px;
+  /*background-color: #dfdfdf;*/
+}
+
+div.subject-form h2,
+div.evento-form h2 {
+  font-family: Impact;
+  align-self: center;
+}
+
+h3 {
+  align-self: center;
+}
+
+div.subject-form,
+div.evento-form,
+div.configuracion {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20%;
+  margin-right: 20%;
+  align-items: flex-start;
+  background-color: white;
+  padding: 30px;
+  padding-left: 5%;
+  padding-right: 5%;
+  box-shadow: gray 3px 3px 13px;
+}
+
+div.configuracion {
+  margin-top: 50px;
+}
+
+p {
+  display: flex;
+  gap: 30px;
+}
+
+#actualizar,
+#eliminar,
+#aniadir,
+#submitButton,
+#fileButton,
+#pdfButton,
+#borrarTodo {
+  align-self: center;
+}

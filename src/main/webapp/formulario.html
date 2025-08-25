@@ -4,16 +4,37 @@
 	<head>
 		<title>Actualizar sujeto</title>
 		<script src="sdk/es6-shim.js"></script>
-    	<script src="sdk/websdk.client.bundle.min.js"></script>
-   		<script src="sdk/fingerprint.sdk.min.js"></script>
+    <script src="sdk/websdk.client.bundle.min.js"></script>
+    <script src="sdk/fingerprint.sdk.min.js"></script>
 		<script src="scripts/fetchParams.js"></script>
 		<script src="scripts/formulario.js"></script>
 		<script src="scripts/app.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/general-styles.css">
+    <link rel="stylesheet" href="css/formulario.css">
 	</head>
 	
 	<body>
+  <header>
+    <div class="logo">
+      <a class="logo-link" href="index.html"><h2 class="league-gothic">STUTCJ-FIngerprint</h2></a>
+      <div class="fingerprint">
+        <img src='images/fingerprint.png'>
+      </div>
+    </div>
+    <nav class="menu">
+      <a href='tabla.html'>Tabla Agremiado</a>
+      <a href='tablaEventos.html'>Tabla de Eventos</a>
+      <a href='tomaAsistencia.html'>Toma de Asistencia</a>
+      <a href='tablaAsistencia.html'>Tabla de Asistencia</a>
+      <a href='conf.html'>Configuración</a>
+      <a href='nosotros.html'>Nosotros</a>
+    <nav>
+  </header>
 		<div class="subject-form">
-			<h2>Formulario</h2>
+			<h2>Actualizar agremiado</h2>
 			<p><label>N. Reloj:</label><input type="text" name="nreloj"/></p>
 			<p><label>Nombre(s):</label><input type="text" name="nombre"/></p>
 			<p><label>Apellido Paterno:</label><input type="text" name="apellidoPaterno"/></p>
@@ -22,7 +43,7 @@
 			<p><label>Actualizar imagen dactilar:</label></p> 
 			<div id="content"></div>
 			<!-- <p><label>Estadod de activacion:</label><input type="text" name="estadoActivacion"/></p> -->
-			<p><select name="activado" id="activado">
+			<p><label>¿Activado?</label><select name="activado" id="activado">
 				<option selected >Si</option>
 				<option>No</option>
 			</select></p>

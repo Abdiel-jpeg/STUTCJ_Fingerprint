@@ -6,11 +6,32 @@
 		<title>Añadir nuevo evento</title>
 		<script src="scripts/fetchParams.js"></script>
 		<script src="scripts/formularioEventoAniadir.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/general-styles.css">
+    <link rel="stylesheet" href="css/formulario.css">
 	</head>
 	
 	<body>
+    <header>
+      <div class="logo">
+        <a class="logo-link" href="index.html"><h2 class="league-gothic">STUTCJ-FIngerprint</h2></a>
+        <div class="fingerprint">
+          <img src='images/fingerprint.png'>
+        </div>
+      </div>
+      <nav class="menu">
+        <a href='tabla.html'>Tabla Agremiado</a>
+        <a href='tablaEventos.html'>Tabla de Eventos</a>
+        <a href='tomaAsistencia.html'>Toma de Asistencia</a>
+        <a href='tablaAsistencia.html'>Tabla de Asistencia</a>
+        <a href='conf.html'>Configuración</a>
+        <a href='nosotros.html'>Nosotros</a>
+      <nav>
+    </header>
 		<div class="evento-form">
-			<h2>Añadir nuevo sujeto</h2>
+			<h2>Añadir nuevo evento</h2>
 			<p><label>Título:</label><input type="text" name="titulo"/></p>
 			<p><label>Descripcion:</label><input type="text" name="descripcion"/></p>
 			<button id="aniadir">Añadir</button>

@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=League+Gothic&display=swap" rel="stylesheet">
     <link href="css/general-styles.css" rel="stylesheet">
+    <link href="css/formulario.css" rel="stylesheet">
 	</head>
 	<body>
     <header>
@@ -30,7 +31,7 @@
     </header>
 		<h1>Configuración del Servidor</h1>
 		
-		<div>
+		<div class="configuracion">
 			<h3>Configuración general</h3>
 			<h4>Número de resultados por página en tablas:</h4>
 			<p><label>Agremiado:</label> <input id ="limitAgremiado" type="number"></p>
@@ -42,25 +43,24 @@
 			<p>Mientras sea menor el margen de error mas respuestas inexactas de asistencias habrá.</p>
 			<p>Sin embargo, si este valor es demasiado alto no se reconocerá ningún sujeto</p>
 			<p>Se debe de modificar este valor para encontrar el equilibrio en la toma de asistencia</p>
+      <button id="submitButton" type="submit">Actualizar Configuración</button>
 		</div>
 
-    <p><button id="submitButton" type="submit">Actualizar Configuración</button></p>
-
-		<div>
+		<div class="configuracion">
 			<h3>SCV</h3>
 			<p><label>Añadir manualmente archivo SCV:</label> <input id="inputFile" type="file" accept=".csv"></p>
+		  <button id="fileButton">Enviar</button>
 		</div>
-		<button id="fileButton">Enviar</button>
 
-    <div>
+    <div class="configuracion">
       <h3>Descargar PDF</h3>
-      <p><button onClick="location.href='SvPDF'">Descargar PDF</button></p>
+      <button id="pdfButton" onClick="location.href='SvPDF'">Descargar PDF</button>
     </div>
 		
-		<div>
+		<div class="configuracion">
 			<h3>Área de peligro</h3>
 			
-			<p><button id="borrarTodo">Borrar todos los sujetos</button></p>
+			<button id="borrarTodo">Borrar todos los sujetos</button>
 		</div>
 	</body>
 </html>

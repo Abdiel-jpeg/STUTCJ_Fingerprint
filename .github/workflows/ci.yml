@@ -1,0 +1,39 @@
+yaml
+name: STUTCJ Fingerprint Maven CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+      - name: Verify ENV
+        run: | 
+          echo "Generating envs"
+          echo "MYSQL_ROOT_PASSWORD=1234" > db.env
+          echo "MYSQL_DATABASE=fingerprint_database" >> db.env
+          echo "MYSQL_USER=stutcj" >> db.env
+          echo "MYSQL_PASSWORD=1234" >> db.env
+          
+          python -c 'import os
+from base64 import b64encode
+random_key = os.urandom(16)
+b64_random_key = b64encode(random_key).decode("utf-8")
+print(f"SECRET_KEY={b64_random_key}")' >> db.env
+
+          echo "db.env file generated succesfully"
+
+      - name: Run Docker Compose Stack and Execute Tests
+        run: docker-compose up --build --abort-on-container-exit --exit-code-from maventest
+      - name: Clean Up Local Resources
+        run: docker-compose down -v
+
+
+

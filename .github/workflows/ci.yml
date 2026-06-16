@@ -22,7 +22,7 @@ jobs:
           echo "MYSQL_USER=stutcj" >> db.env
           echo "MYSQL_PASSWORD=1234" >> db.env
           
-          python -c 'import os
+          python3 -c 'import os
             from base64 import b64encode
             random_key = os.urandom(16)
             b64_random_key = b64encode(random_key).decode("utf-8")

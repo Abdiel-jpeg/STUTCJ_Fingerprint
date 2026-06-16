@@ -23,10 +23,10 @@ jobs:
           echo "MYSQL_PASSWORD=1234" >> db.env
           
           python3 -c 'import os
-            from base64 import b64encode
-            random_key = os.urandom(16)
-            b64_random_key = b64encode(random_key).decode("utf-8")
-            print(f"SECRET_KEY={b64_random_key}")' >> db.env
+          from base64 import b64encode
+          random_key = os.urandom(16)
+          b64_random_key = b64encode(random_key).decode("utf-8")
+          print(f"SECRET_KEY={b64_random_key}")' >> db.env
 
           echo "db.env file generated succesfully"
 

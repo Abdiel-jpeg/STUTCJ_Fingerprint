@@ -1,5 +1,42 @@
 
+#name: STUTCJ Fingerprint Maven CI
+#on:
+#  push:
+#    branches:
+#      - main
+#  pull_request:
+#    branches:
+#      - main
+#
+#jobs:
+#  build:
+#    runs-on: self-hosted
+#    steps:
+#      - name: Checkout repository code
+#        uses: actions/checkout@v4
+#      - name: Verify ENV
+#        run: | 
+#          echo "Generating envs"
+#          echo "MYSQL_ROOT_PASSWORD=1234" > db.env
+#          echo "MYSQL_DATABASE=fingerprint_database" >> db.env
+#          echo "MYSQL_USER=stutcj" >> db.env
+#          echo "MYSQL_PASSWORD=1234" >> db.env
+#          
+#          python3 -c 'import os
+#          from base64 import b64encode
+#          random_key = os.urandom(16)
+#          b64_random_key = b64encode(random_key).decode("utf-8")
+#          print(f"SECRET_KEY={b64_random_key}")' >> db.env
+#
+#          echo "db.env file generated succesfully"
+#
+#      - name: Run Docker Compose Stack and Execute Tests
+#        run: docker-compose up --build --abort-on-container-exit --exit-code-from maventest
+#      - name: Clean Up Local Resources
+#        run: docker-compose down -v
+
 name: STUTCJ Fingerprint Maven CI
+
 on:
   push:
     branches:
@@ -9,12 +46,15 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-validate:
     runs-on: self-hosted
+
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v4
-      - name: Verify ENV
+
+      # 1. Bloque original para generar credenciales de forma dinámica
+      - name: Verify and Generate ENV
         run: | 
           echo "Generating envs"
           echo "MYSQL_ROOT_PASSWORD=1234" > db.env
@@ -28,12 +68,55 @@ jobs:
           b64_random_key = b64encode(random_key).decode("utf-8")
           print(f"SECRET_KEY={b64_random_key}")' >> db.env
 
-          echo "db.env file generated succesfully"
+          echo "db.env file generated successfully"
 
+      # 2. VALIDACIÓN ESTÁTICA: Asegurar que el YAML de compose y el volumen compartido estén bien formados
+      - name: Validate Docker Compose Configuration
+        run: docker-compose config --quiet
+
+      # 3. EJECUCIÓN SECUENCIAL CON PRUEBA DE HUMO
+      # Up directo por una ejecución controlada en segundo plano (-d) para que Tomcat y Python puedan vivir
       - name: Run Docker Compose Stack and Execute Tests
-        run: docker-compose up --build --abort-on-container-exit --exit-code-from maventest
+        run: |
+          # Levantar todo el stack construyendo las imágenes locales necesarias (ej. python-server)
+          docker-compose up --build -d
+          
+          echo "Esperando a que el contenedor de Maven compile el proyecto (.war)..."
+          # docker wait detiene el pipeline hasta que maventest termina (ya sea éxito o fallo)
+          MAVEN_EXIT_CODE=$(docker wait $(docker-compose ps -a -q maventest))
+          
+          echo "=== Logs de la compilación de Maven ==="
+          docker-compose logs maventest
+          
+          # Si Maven falló, detenemos el pipeline inmediatamente
+          if [ "$MAVEN_EXIT_CODE" -ne 0 ]; then
+            echo "Error: La compilación o pruebas de Maven fallaron con código $MAVEN_EXIT_CODE"
+            exit $MAVEN_EXIT_CODE
+          fi
+          
+          echo "Maven completado con éxito. Esperando 10 segundos para verificar la estabilidad de Tomcat y Python..."
+          sleep 10
+          
+          echo "=== Estado de los servicios actuales ==="
+          docker-compose ps
+          
+          # Validar que Tomcat y Python sigan vivos ('running')
+          TOMCAT_STATUS=$(docker inspect $(docker-compose ps -q tomcattest) --format='{{.State.Running}}')
+          PYTHON_STATUS=$(docker inspect $(docker-compose ps -q pythontest) --format='{{.State.Running}}')
+          
+          if [ "$TOMCAT_STATUS" != "true" ] || [ "$PYTHON_STATUS" != "true" ]; then
+            echo "Error crítico: Los servidores web (Tomcat/Python) no se mantuvieron estables tras la compilación."
+            echo "=== Logs de Tomcat ==="
+            docker-compose logs tomcattest
+            echo "=== Logs de Python ==="
+            docker-compose logs pythontest
+            exit 1
+          fi
+          
+          echo "¡Validación completa! Base de datos, Maven, Tomcat y Python operando de manera correcta."
+
+      # 4. LIMPIEZA: Bloque original de limpieza profunda al finalizar
       - name: Clean Up Local Resources
+        if: always() # Obligatorio para que limpie la máquina local incluso si el test falla
         run: docker-compose down -v
-
-
 
